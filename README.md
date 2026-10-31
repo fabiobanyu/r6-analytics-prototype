@@ -17,6 +17,8 @@ Prototype analisis Rainbow Six Siege esports oleh **Fabio Banyu Cyto**. Jelajahi
 
 Desain memakai nuansa tactical esports dengan latar biru baja, kontras lembut, aksen amber/teal, font Manrope dan Barlow Condensed yang disimpan lokal, serta ikon operator resmi. Komposisi antarmukanya dibuat sendiri.
 
+**Untuk pembaca baru:** mulai dari pertanyaan di Ringkasan, buka panduan empat langkah, atau klik **?** untuk memahami istilah. Nama operator, peta, minggu, tim, dan nomor ronde dapat dijelajahi dengan klik. Baca [panduan penggunaan singkat](docs/QUICKSTART.md).
+
 ## Coba dalam satu langkah
 
 Unduh repository melalui **Code → Download ZIP**, ekstrak, lalu buka **`index.html`** atau **`Buka Demo.cmd`**. Tidak perlu instalasi, server, database, akun, atau koneksi internet untuk membaca snapshot yang disertakan.
@@ -37,6 +39,8 @@ HTML berisi snapshot tertanam sehingga bisa dibuka sendiri. Simpan folder `data/
 | Baseline model | Perbandingan dua tim, Brier, log loss, akurasi favorit, baseline proporsi historis |
 | Transparansi | URL, tanggal unduh UTC, status HTTP, SHA-256, coverage dan status pembaruan |
 | Ekspor | JSON lengkap dan CSV hasil filter; CSV tabel tersedia dalam `data/` |
+| Panduan awam | Ringkasan dalam kalimat, panduan empat langkah, kamus istilah, dan penjelasan angka saat diklik |
+| Jelajah interaktif | Klik minggu/peta untuk menyaring pertandingan, buka perbandingan operator, tukar tim, dan periksa hasil setiap ronde |
 
 ## Snapshot yang disertakan
 
@@ -78,7 +82,7 @@ Di Windows, klik **`Jalankan Pembaruan Otomatis.cmd`** atau **`Perbarui Data Sek
 
 Pembaru menemukan musim aktif dari navigasi resmi, memeriksa kompetisi dan fase, lalu menambahkan maksimal 80 halaman detail baru per siklus. Halaman indeks menggunakan cache 6 jam; detail series selesai diperiksa ulang setelah 7 hari. Maksimal 3 koneksi bersamaan, timeout 35 detik, dan maksimal 3 percobaan. Ini polling, bukan feed langsung.
 
-HTML yang terbuka memeriksa `data/latest.js` dan `data/status.js` setiap 60 detik melalui script lokal, sehingga tidak membutuhkan `fetch()` terhadap `file://`. Tombol **Periksa cache** hanya membaca file lokal; pengunduhan Ubisoft dilakukan Python.
+HTML yang terbuka memeriksa `data/latest.js` dan `data/status.js` setiap 60 detik melalui script lokal, sehingga tidak membutuhkan `fetch()` terhadap `file://`. Tombol **Baca data terbaru** hanya membaca file lokal; pengunduhan Ubisoft dilakukan Python.
 
 Komputer, internet, dan proses pembaru perlu aktif. Jika menggunakan penjadwal lain, jalankan pembaruan sekali per 6 jam; jangan jalankan bersamaan dengan `--watch`. Kunci satu penulis mencegah dua pembaru menimpa snapshot. Perubahan sumber atau kegagalan validasi mempertahankan snapshot terakhir dan menulis status gagal. Pembaruan lokal tidak melakukan commit atau push GitHub.
 
@@ -110,7 +114,7 @@ npm test
 node scripts/analyze.cjs
 ```
 
-18 pengujian otomatis lulus setelah pembaruan operator: keunikan ID/grain, provenance, kebocoran label, batch timestamp sama, baseline, nilai kosong/0, filter, navigasi, detail, estimasi, CSV, refresh cache, cache rusak, jaringan gagal, perbedaan pemilihan/menang/win rate, pemisahan cohort, minimum sampel, dan peta ban unik. Validator mencocokkan statistik dengan ekstrak sumbernya masing-masing.
+21 pengujian otomatis lulus setelah pembaruan interaksi: keunikan ID/grain, provenance, kebocoran label, batch timestamp sama, baseline, nilai kosong/0, filter, navigasi, detail, estimasi, CSV, refresh cache, cache rusak, jaringan gagal, perbedaan pemilihan/menang/win rate, pemisahan cohort, minimum sampel, peta ban unik, konsistensi filter peta/minggu, serta alur pengguna baru. Validator mencocokkan statistik dengan ekstrak sumbernya masing-masing.
 
 Uji UI memakai **jsdom**, bukan browser visual. Browser pengujian menolak `file://`; tampilan responsif, dialog native, dan unduhan browser masih memerlukan verifikasi manual. [Checklist QA](docs/QA.md) mencatat batas pengujian ini. GitHub Actions hanya melakukan validasi dan tes, tanpa deployment.
 

@@ -58,12 +58,16 @@
     return {ready:true,na,nb,p:probability(model.ratings[a]??1500,model.ratings[b]??1500)};
   }
   function subset(d,filter={}) {
+    const mapMatches=filter.map?new Set(d.games.filter(g=>g.map===filter.map).map(g=>g.matchId)):null;
+    const weekStart=filter.week?Date.parse(filter.week+'T00:00:00Z'):null;
     return d.matches.filter(m=>(!filter.event || String(m.competitionId)===filter.event) && (!filter.team || [m.teamA,m.teamB].map(String).includes(filter.team)) &&
+      (!mapMatches || mapMatches.has(m.id)) && (weekStart===null || (Date.parse(m.date)>=weekStart && Date.parse(m.date)<weekStart+7*86400000)) &&
       (!filter.search || `${teamName(d,m.teamA)} ${teamName(d,m.teamB)} ${d.competitions[m.competitionId]?.name??''}`.toLowerCase().includes(filter.search.toLowerCase())));
   }
-  function summarize(d, matches) {
+  function summarize(d, matches, filter={}) {
     const ids=new Set(matches.map(m=>m.id)), played=matches.filter(m=>m.completed);
-    const games=d.games.filter(g=>ids.has(g.matchId)), rounds=d.rounds.filter(r=>ids.has(r.matchId));
+    const games=d.games.filter(g=>ids.has(g.matchId)&&(!filter.map||g.map===filter.map));
+    const gameIds=new Set(games.map(g=>g.id)),rounds=d.rounds.filter(r=>gameIds.has(r.gameId));
     const mapByGame=new Map(games.map(g=>[g.id,g.map]));
     const maps={};
     for (const g of games) if (g.map) { maps[g.map]??={name:g.map,games:0,rounds:0,attackWins:0}; maps[g.map].games++; }
@@ -83,9 +87,10 @@
     return {played:played.length,upcoming:matches.filter(m=>!m.completed).length,detailed:played.filter(m=>m.detailed).length,games:games.length,rounds:rounds.length,
       maps:Object.values(maps).sort((a,b)=>b.games-a.games),weekly:Object.entries(weekly).sort((a,b)=>a[0].localeCompare(b[0]))};
   }
-  function playerLeaders(d,matches) {
+  function playerLeaders(d,matches,filter={}) {
     const ids=new Set(matches.map(m=>m.id)), players={};
-    for (const row of d.players.filter(p=>ids.has(p.matchId))) {
+    const games=filter.map?new Set(d.games.filter(g=>g.map===filter.map).map(g=>g.id)):null;
+    for (const row of d.players.filter(p=>ids.has(p.matchId)&&(!games||games.has(p.gameId)))) {
       // Incomplete kill/death rows cannot silently become zero.
       if (row.kills==null || row.deaths==null) continue;
       const key=String(row.playerId), p=players[key]??={id:row.playerId,name:row.name,kills:0,deaths:0,games:0,kostSum:0,kostRounds:0};
@@ -126,10 +131,11 @@
     rows.sort((a,b)=>sort==='winRate'?(b.winRate??-1)-(a.winRate??-1)||b.picks-a.picks:sort==='picks'?b.picks-a.picks||b.wins-a.wins:b.wins-a.wins||b.picks-a.picks);
     return rows;
   }
-  function banLeaders(d,matches,teamId=null){
+  function banLeaders(d,matches,teamId=null,map=null){
     const ids=new Set(matches.map(m=>m.id)),counts={},seen=new Set();
+    const games=map?new Set(d.games.filter(g=>g.map===map).map(g=>g.id)):null;
     for(const row of d.bans){
-      if(!ids.has(row.matchId) || (teamId!=null && String(row.teamId)!==String(teamId)))continue;
+      if(!ids.has(row.matchId) || (games&&!games.has(row.gameId)) || (teamId!=null && String(row.teamId)!==String(teamId)))continue;
       // A map can record the same operator at multiple round indices. Count each map once.
       const key=JSON.stringify([row.gameId,row.operatorId]);if(seen.has(key))continue;seen.add(key);
       const c=counts[row.operatorId]??={operator:row.operator,side:row.attacker?'Attack':'Defense',maps:0};c.maps++;

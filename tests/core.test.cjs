@@ -16,3 +16,19 @@ test('unavailable map names are not filled and future forecasts do not write dat
 });
 test('CSV escapes spreadsheets and preserves real zero and null',()=>{const output=C.csv([{name:'=not a source record',score:0,missing:null},{name:'"a,b"\nnext',score:1,missing:null}]);assert.ok(output.includes('"\'=not a source record"'));assert.ok(output.includes('"0",""'));assert.ok(output.includes('""a,b""'));});
 test('corrupt snapshot is rejected and JavaScript contains no synthetic generator',()=>{const bad=structuredClone(d);bad.matches.push(bad.matches[0]);assert.throws(()=>C.validate(bad));const engine=fs.readFileSync(path.join(__dirname,'../src/engine.js'),'utf8');assert.doesNotMatch(engine,/Math\.random|syntheticStrength|makeFixtures|forced_prediction/);assert.doesNotThrow(()=>new vm.Script(engine));});
+test('map drill-down preserves series grain while restricting map, round, player and ban statistics',()=>{
+  const name=d.games.find(g=>g.map)?.map,filter={map:name},matches=C.subset(d,filter),ids=new Set(matches.map(m=>m.id));
+  const games=d.games.filter(g=>g.map===name&&ids.has(g.matchId)),gameIds=new Set(games.map(g=>g.id));
+  assert.equal(matches.length,new Set(d.games.filter(g=>g.map===name).map(g=>g.matchId)).size);
+  const summary=C.summarize(d,matches,filter);assert.equal(summary.games,games.length);assert.equal(summary.rounds,d.rounds.filter(r=>gameIds.has(r.gameId)).length);assert.ok(summary.maps.every(m=>m.name===name));
+  for(const p of C.playerLeaders(d,matches,filter))assert.equal(p.kills,d.players.filter(r=>gameIds.has(r.gameId)&&r.playerId===p.id&&r.kills!=null&&r.deaths!=null).reduce((s,r)=>s+r.kills,0));
+  for(const b of C.banLeaders(d,matches,null,name))assert.equal(b.maps,new Set(d.bans.filter(r=>gameIds.has(r.gameId)&&r.operator===b.operator).map(r=>r.gameId)).size);
+});
+test('week and compound filters select only real source dates within a seven-day UTC interval',()=>{
+  const actual=d.matches.find(m=>m.completed&&d.games.some(g=>g.matchId===m.id&&g.map)),dt=new Date(actual.date);dt.setUTCDate(dt.getUTCDate()-((dt.getUTCDay()+6)%7));
+  const week=dt.toISOString().slice(0,10),start=Date.parse(week+'T00:00:00Z'),end=start+7*86400000;
+  const all=C.subset(d,{week});assert.ok(all.length>0);assert.deepEqual(all,d.matches.filter(m=>Date.parse(m.date)>=start&&Date.parse(m.date)<end));
+  const map=d.games.find(g=>g.matchId===actual.id&&g.map).map,filter={week,map,team:String(actual.teamA),event:String(actual.competitionId)};
+  const expected=d.matches.filter(m=>Date.parse(m.date)>=start&&Date.parse(m.date)<end&&[m.teamA,m.teamB].includes(actual.teamA)&&m.competitionId===actual.competitionId&&d.games.some(g=>g.matchId===m.id&&g.map===map));
+  assert.deepEqual(C.subset(d,filter),expected);assert.ok(C.subset(d,filter).some(m=>m.id===actual.id));assert.deepEqual(C.subset(d,{week:'1900-01-01'}),[]);
+});

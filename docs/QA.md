@@ -1,6 +1,6 @@
 # QA prototype
 
-Status pembaruan 31 Oktober 2026: **validasi sumber hasil/operator lulus, 18 tes otomatis lulus; QA visual browser masih terbuka**. Ini prototype yang bisa ditinjau, belum pernyataan kesiapan produksi.
+Status pembaruan 31 Oktober 2026: **validasi sumber hasil/operator lulus, 21 tes otomatis lulus; QA visual browser masih terbuka**. Ini prototype yang bisa ditinjau, belum pernyataan kesiapan produksi.
 
 ## Yang teruji
 
@@ -26,8 +26,13 @@ Status pembaruan 31 Oktober 2026: **validasi sumber hasil/operator lulus, 18 tes
 16. Minimum sampel, sisi, tim, pencarian, dan event yang belum tercakup diterapkan.
 17. Win rate 0% dipertahankan; statistik rusak atau duplikat ditolak.
 18. Ban dihitung per peta unik dan tidak dipakai sebagai pemilihan atau kemenangan operator.
+19. Filter peta menjaga grain pertandingan dan membatasi peta, ronde, pemain, serta ban pada peta yang dipilih.
+20. Filter minggu dan gabungan kompetisi/tim/peta hanya mengembalikan tanggal sumber dalam jendela tujuh hari UTC yang benar.
+21. Alur pembaca baru: panduan, pencarian kamus, tab bantuan via keyboard, preset, detail/perbandingan operator, filter peta/minggu, hapus label, tukar tim, serta riwayat tim. Data tertanam tidak berubah akibat interaksi.
 
 Uji DOM juga mencakup navigasi Operator intel, pergantian sort, minimum sampel, pencarian, CSV operator, dan kondisi event yang belum tersedia. Font dan ikon tertanam agar tidak mengandalkan CDN saat demo dibuka. Palet diperbarui sesuai preferensi gelap dengan kontras lembut dan nuansa tactical esports.
+
+Detail pertandingan juga diuji dengan mengklik nomor ronde dan mencocokkan penjelasan pemenang terhadap ID tim asli. Persentase bukan hasil simulasi; panduan menjelaskan beda pertandingan/peta/ronde dan perkiraan model.
 
 Uji DOM memakai jsdom; implementasi dialog dan objek URL unduhan diganti stub hanya dalam tes. Tes ini tidak membuktikan tampilan, perilaku dialog native, unduhan file nyata, atau kebijakan pemuatan script lokal setiap browser. Kegagalan jaringan/cache pada tes sengaja dibuat pada folder sementara, bukan dataset utama.
 
