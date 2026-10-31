@@ -37,6 +37,8 @@ test('standalone HTML: navigation, real filters, details, prediction, CSV and ca
     $('forecast-b').value=ready[0];$('predict').click();assert.match($('forecast-result').textContent,/berbeda/);
     const refreshed=structuredClone(data);refreshed.meta.generatedAt=new Date(Date.parse(data.meta.generatedAt)+1000).toISOString();w.R6_LATEST=refreshed;w.dispatchEvent(new w.Event('r6-update'));assert.equal($('team-filter').value,String(detailed.teamA));
     const invalid=structuredClone(data);invalid.matches.push(invalid.matches[0]);w.R6_LATEST=invalid;w.dispatchEvent(new w.Event('r6-update'));assert.match($('sync-status').textContent,/ditolak/);
+    w.R6_STATUS={ok:true};w.dispatchEvent(new w.Event('r6-status'));assert.match($('sync-status').textContent,/ditolak/);
+    w.R6_LATEST=refreshed;w.dispatchEvent(new w.Event('r6-update'));
     w.R6_STATUS={ok:false,message:'Simulated network failure in TEST ONLY'};w.dispatchEvent(new w.Event('r6-status'));assert.match($('sync-status').textContent,/gagal/);assert.ok($('kpis').textContent.includes('Pertandingan selesai'));
     assert.deepEqual(errors,[]);
   }finally{w.close();}

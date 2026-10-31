@@ -35,6 +35,8 @@ Filter pemilihan operator hanya mengikuti kompetisi dan tim. Filter peta/minggu 
 
 Batang peluang menunjukkan perkiraan model untuk dua tim, bukan hasil pertandingan baru. Keduanya tetap bisa menang. Masing-masing tim perlu minimal lima pertandingan eligible dalam data. Jika belum cukup, peluang tetap tidak ditampilkan.
 
+Pintasan **Bagaimana peluang dua tim?** hanya memilih pasangan awal dan membuka panel; ia tidak menghitung peluang. Angka baru muncul setelah **Lihat perkiraan peluang** ditekan. Mengganti atau menukar tim menghapus hasil sebelumnya. Tekan tombol lagi untuk menghitung pilihan baru. Jika data pertandingan berubah, hasil lama juga dihapus; membaca cache yang isinya sama tidak menghapus hasil yang sudah diminta.
+
 Klik **Lihat riwayat** untuk memeriksa pertandingan tim. Filter utama dihapus agar seluruh riwayat tim pada dataset terlihat. Model memakai seluruh riwayat eligible dalam snapshot, bukan hanya filter halaman. Nilai teknis seperti Brier dan log loss tersedia di bagian **Lihat ukuran teknis model**; penjelasan awal menampilkan ketepatan historis dan pembanding sederhana.
 
 Seluruh interaksi ini membaca data yang tersedia. Tidak ada hasil acak atau pertandingan baru yang ditambahkan saat tombol diklik.

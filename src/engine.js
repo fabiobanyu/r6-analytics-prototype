@@ -2,7 +2,7 @@
   'use strict';
   const teamName = (d, id) => d.teams[String(id)]?.name ?? `Team ${id}`;
   function validate(d) {
-    if (d.schemaVersion !== 1 || !Array.isArray(d.matches) || !d.meta?.generatedAt) throw Error('Skema snapshot tidak sesuai');
+    if (d.schemaVersion !== 1 || !Array.isArray(d.matches) || !Number.isFinite(Date.parse(d.meta?.generatedAt)) || !/^[a-f0-9]{64}$/.test(d.meta?.dataSha256??'')) throw Error('Skema snapshot tidak sesuai');
     const seen = new Set();
     for (const m of d.matches) {
       if (seen.has(m.id) || m.teamA === m.teamB || !d.teams[m.teamA] || !d.teams[m.teamB] || !Number.isFinite(Date.parse(m.date))) throw Error('Identitas pertandingan tidak valid');

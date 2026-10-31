@@ -7,7 +7,8 @@
   const date=(value,short=false)=>new Intl.DateTimeFormat('id-ID',{timeZone:'UTC',day:'2-digit',month:short?'short':'long',year:'numeric',...(short?{}:{hour:'2-digit',minute:'2-digit'})}).format(new Date(value));
   const operators=JSON.parse($('operator-dataset').textContent),icons=JSON.parse($('visual-assets').textContent);
   const operatorIcon=(name,extra='')=>icons[name]?`<span class="operator-icon ${extra}"><img src="${icons[name]}" alt="" width="48" height="48"></span>`:`<span class="operator-icon operator-fallback ${extra}" aria-hidden="true">${esc(name.slice(0,2).toUpperCase())}</span>`;
-  let data, page=0, filtered=[], model, reloadBusy=false, started=false,selectedMap='',selectedWeek='',guideStep=0,operatorDetail=null,toastTimer=null,forecastShown=false;
+  let data, page=0, filtered=[], model, reloadBusy=false, started=false,selectedMap='',selectedWeek='',guideStep=0,operatorDetail=null,toastTimer=null,cacheRejection=null;
+  const cacheLoadFailures=new Set();
   const pageSize=20;
   const filters=()=>({event:$('event-filter').value,team:$('team-filter').value,search:$('search').value.trim(),map:selectedMap,week:selectedWeek});
   const terms={
@@ -43,7 +44,7 @@
     }else if(name==='forecast'){
       const teams=Object.entries(model.counts).filter(([,n])=>n>=5).sort((a,b)=>b[1]-a[1]);
       if(teams.length>=2){$('forecast-a').value=teams[0][0];$('forecast-b').value=teams[1][0];}
-      render();navigate('model');predict();toast('Dua tim dengan riwayat yang cukup dipilih sebagai awal. Anda bisa menggantinya.');
+      clearForecast();render();navigate('model');toast('Dua tim dipilih sebagai awal. Ganti bila perlu, lalu tekan “Lihat perkiraan peluang”.');
     }else{render();navigate('overview');}
   }
   function renderFilterContext(){
@@ -110,9 +111,10 @@
     $('operator-count').textContent=`${rows.length} dari ${total} operator · ${team??'Semua tim dalam snapshot SLC'} · minimum ${$('operator-min').value} pemilihan. Operator mengikuti filter kompetisi dan tim; filter peta, minggu, serta pencarian pertandingan tidak diterapkan ke snapshot agregat ini.`;
     $('operator-rows').innerHTML=rows.length?rows.map((r,i)=>`<tr><td><div class="operator-name"><span class="rank-no">${String(i+1).padStart(2,'0')}</span>${operatorIcon(r.operator)}<button class="table-link" data-open-operator="${esc(r.operator)}" data-operator-side="${r.side}" data-operator-team="${esc(r.team??'')}">${esc(r.operator)} ↗</button></div></td><td><span class="side-label ${r.side==='Attack'?'attack':'defense'}">${r.side==='Attack'?'Menyerang':'Bertahan'}</span></td><td>${num(r.picks)}</td><td class="win-count">${num(r.wins)}</td><td title="Interval Wilson 95% indikatif: ${pct(r.intervalLow)}–${pct(r.intervalHigh)}; ronde dapat berkorelasi"><div class="win-rate-cell"><b>${pct(r.winRate)}</b><span class="rate-track"><i style="width:${(r.winRate??0)*100}%"></i></span></div></td><td>${pct(r.presence)}<small class="cell-note">${num(r.sideRounds)} ronde sisi tercatat</small></td></tr>`).join(''):`<tr><td colspan="6" class="empty">${esc(empty)} ${recovery}</td></tr>`;
     $('export-operators').disabled=!rows.length;
-    const spotlight=C.operatorStats(operators,operatorFilter({sort:'picks',side:'',search:'',minPicks:30}));
+    const spotlight=C.operatorStats(operators,operatorFilter({sort:'picks',side:'',search:'',minPicks:0}));
     const attack=spotlight.find(r=>r.side==='Attack'),defense=spotlight.find(r=>r.side==='Defense');
-    $('operator-preview').innerHTML=attack&&defense?[attack,defense].map(r=>`<article class="spotlight-card ${r.side==='Attack'?'attack':'defense'}">${operatorIcon(r.operator,'spotlight-icon')}<div><p class="eyebrow">Favorit ${r.side==='Attack'?'menyerang':'bertahan'}</p><h3>${esc(r.operator)}</h3><p><b>${num(r.picks)}</b> pemilihan <span>·</span> <b>${num(r.wins)}</b> ronde menang</p><button class="text-link" data-open-operator="${esc(r.operator)}" data-operator-side="${r.side}" data-operator-team="${esc(r.team??'')}">Apa artinya? →</button></div><div class="spotlight-rate"><strong>${pct(r.winRate)}</strong><span>win rate ronde</span></div></article>`).join(''):`<p class="empty">${esc(empty)} ${recovery}</p>`;
+    const featured=[attack,defense].filter(Boolean);
+    $('operator-preview').innerHTML=featured.length?featured.map(r=>`<article class="spotlight-card ${r.side==='Attack'?'attack':'defense'}">${operatorIcon(r.operator,'spotlight-icon')}<div><p class="eyebrow">Favorit ${r.side==='Attack'?'menyerang':'bertahan'}</p><h3>${esc(r.operator)}</h3><p><b>${num(r.picks)}</b> pemilihan <span>·</span> <b>${num(r.wins)}</b> ronde menang</p><button class="text-link" data-open-operator="${esc(r.operator)}" data-operator-side="${r.side}" data-operator-team="${esc(r.team??'')}">Apa artinya? →</button></div><div class="spotlight-rate"><strong>${pct(r.winRate)}</strong><span>win rate ronde</span></div></article>`).join(''):`<p class="empty">${esc(empty)} ${recovery}</p>`;
     const bans=C.banLeaders(data,filtered,filters().team||null,selectedMap||null),max=Math.max(1,...bans.map(b=>b.maps));
     $('ban-chart').innerHTML=bans.length?bans.map(b=>`<div class="ban-item">${operatorIcon(b.operator)}<div><div class="map-meta"><b>${esc(b.operator)}</b><span>${num(b.maps)} peta</span></div><div class="bar-track"><div class="bar-fill" style="width:${b.maps/max*100}%"></div></div></div></div>`).join(''):'<p class="empty">Tidak ada operator ban dalam cakupan filter.</p>';
   }
@@ -130,6 +132,7 @@
     $('match-count').textContent=`${num(filtered.length)} pertandingan dalam pilihan Anda. Skor utama menunjukkan jumlah peta yang dimenangkan.${selectedMap?' Buka detail untuk melihat peta '+selectedMap+'.':''}`;
     $('match-rows').innerHTML=filtered.slice(page*pageSize,(page+1)*pageSize).map(m=>`<tr><td class="match-date">${esc(date(m.date,true))}<br>${new Date(m.date).toISOString().slice(11,16)} ${m.isTimeTBD?'(TBD)':''}</td><td>${esc(C.teamName(data,m.teamA))}<span class="score">${m.completed?`${m.scoreA??'—'} : ${m.scoreB??'—'}`:'vs'}</span>${esc(C.teamName(data,m.teamB))}</td><td>${esc(data.competitions[m.competitionId]?.name??'—')}</td><td><span class="status-tag ${!m.detailed?'missing':''}">${!m.completed?'TERJADWAL':m.detailed?'DETAIL':'SKOR'}</span>${m.forfeit?' · forfeit':''}</td><td><button class="subtle detail-button" data-id="${m.id}">Lihat ↗</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Tidak ada pertandingan yang cocok.</td></tr>';
     $('page-label').textContent=`${page+1} / ${pages}`; $('prev').disabled=page===0; $('next').disabled=page>=pages-1;
+    $('export').disabled=filtered.length===0;
   }
   function renderModel() {
     const e=model.evaluation;
@@ -160,12 +163,15 @@
     const difference=a.winRate==null||b.winRate==null?null:Math.abs(a.winRate-b.winRate)*100;
     $('operator-comparison').innerHTML=`<div class="comparison-pair"><div><strong>${esc(a.operator)}</strong><b>${pct(a.winRate)}</b><span>${num(a.wins)} menang / ${num(a.picks)} pilihan</span></div><div><strong>${esc(b.operator)}</strong><b>${pct(b.winRate)}</b><span>${num(b.wins)} menang / ${num(b.picks)} pilihan</span></div></div><p>${difference==null?'Belum cukup nilai untuk menghitung selisih.':`Selisih tingkat kemenangan: <strong>${difference.toFixed(1)} poin persentase</strong>.`} Jumlah pemilihan berbeda dapat memengaruhi perbandingan; persentase lebih tinggi tidak otomatis berarti operator lebih baik.</p>`;
   }
+  function clearForecast(message='Belum dihitung. Pilih dua tim, lalu tekan “Lihat perkiraan peluang”.'){
+    $('forecast-result').dataset.state='idle';$('forecast-result').textContent=message;
+  }
   function predict(){
-    forecastShown=true;
     try{
       const a=$('forecast-a').value,b=$('forecast-b').value,p=C.forecast(data,a,b);
+      $('forecast-result').dataset.state=p.ready?'result':'insufficient';
       $('forecast-result').innerHTML=p.ready?`<div class="forecast-pair"><div><span>${esc(C.teamName(data,a))}</span><strong>${pct(p.p)}</strong></div><div><span>${esc(C.teamName(data,b))}</span><strong>${pct(1-p.p)}</strong></div></div><div class="outcome-bar forecast-bar" role="img" aria-label="Peluang ${esc(C.teamName(data,a))} ${pct(p.p)}, ${esc(C.teamName(data,b))} ${pct(1-p.p)}"><span style="width:${100*p.p}%"></span></div><p class="prediction-reading">${Math.abs(p.p-.5)<.1?'Peluang kedua tim masih berdekatan.':'Model lebih mengunggulkan salah satu tim pada riwayat yang tersedia.'} <strong>Kedua tim tetap bisa menang.</strong> Angka ini perkiraan model, bukan pertandingan baru atau kepastian hasil.</p><p class="chart-note">Dihitung dari ${p.na} pertandingan sebelumnya untuk ${esc(C.teamName(data,a))} dan ${p.nb} untuk ${esc(C.teamName(data,b))} dalam data ini.</p><div class="history-actions"><button class="text-link" data-team-history="${esc(a)}">Lihat riwayat ${esc(C.teamName(data,a))} ↗</button><button class="text-link" data-team-history="${esc(b)}">Lihat riwayat ${esc(C.teamName(data,b))} ↗</button></div>`:`<p class="coverage-note">Data belum cukup. Masing-masing tim perlu sedikitnya 5 pertandingan selesai yang memenuhi syarat. Saat ini tersedia ${p.na} dan ${p.nb}; halaman tidak mengarang peluang pengganti.</p>`;
-    }catch(e){$('forecast-result').textContent=e.message;}
+    }catch(e){$('forecast-result').dataset.state='error';$('forecast-result').textContent=e.message;}
   }
   function helpTab(tab){
     const glossary=tab==='glossary';$('guide-panel').hidden=glossary;$('glossary-panel').hidden=!glossary;
@@ -186,30 +192,37 @@
   }
   function accept(next,initial=false) {
     C.validate(next);
-    if(!initial && next.meta.generatedAt===data.meta.generatedAt && next.meta.dataSha256===data.meta.dataSha256)return;
-    data=next; model=C.elo(data); forecastShown=false; populate(); render(); renderModel(); renderOperatorSource();
+    if(!initial && Date.parse(next.meta.generatedAt)<Date.parse(data.meta.generatedAt))throw Error('Snapshot yang datang lebih lama daripada data yang sedang ditampilkan');
+    cacheRejection=null;
+    if(!initial && next.meta.generatedAt===data.meta.generatedAt && next.meta.dataSha256===data.meta.dataSha256){updateStatus();return;}
+    data=next; model=C.elo(data); populate(); render(); renderModel(); renderOperatorSource();
     $('season-label').textContent=`MUSIM ${data.meta.season.name}`;
     $('snapshot-date').textContent=`${date(data.meta.generatedAt)} UTC`;
     $('source-latest').textContent=`Laga selesai terbaru: ${data.meta.latestCompletedMatch?date(data.meta.latestCompletedMatch,true):'—'} UTC`;
-    $('forecast-result').textContent='Pilih dua tim untuk melihat estimasi berdasarkan snapshot ini.';
+    clearForecast(initial?undefined:'Data diperbarui. Tekan “Lihat perkiraan peluang” untuk menghitung dengan data terbaru.');
     updateStatus();
   }
   function updateStatus() {
     const status=window.R6_STATUS;
     const age=(Date.now()-Date.parse(data.meta.generatedAt))/3600000;
-    $('sync-status').className='';
-    if(status && !status.ok){$('sync-status').textContent='Pembaruan gagal · cache terakhir dipertahankan';$('sync-status').className='error';$('sync-status').title=status.message;}
+    $('sync-status').className='';$('sync-status').title='';
+    if(cacheRejection){$('sync-status').textContent=`Cache baru ditolak: ${cacheRejection}`;$('sync-status').className='error';}
+    else if(cacheLoadFailures.has('latest.js')){$('sync-status').textContent='File data terbaru tidak dapat dibaca · data terakhir tetap ditampilkan';$('sync-status').className='warning';}
+    else if(cacheLoadFailures.has('status.js')){$('sync-status').textContent='Data tersedia · status pembaruan terakhir tidak dapat dibaca';$('sync-status').className='warning';}
+    else if(status && !status.ok){$('sync-status').textContent='Pembaruan gagal · cache terakhir dipertahankan';$('sync-status').className='error';$('sync-status').title=status.message;}
     else if(status?.errors?.length || data.meta.downloadErrors?.length){$('sync-status').textContent='Snapshot tersedia · sebagian detail gagal diunduh';$('sync-status').className='warning';}
     else if(age>12){$('sync-status').textContent=`Cache berusia ${Math.floor(age)} jam · jalankan pembaru`; $('sync-status').className='warning';}
     else {$('sync-status').textContent=`Cache terverifikasi${data.meta.offlineRebuild?' · rebuild offline':''} · bukan feed langsung`;}
   }
   function loadCache() {
     if(reloadBusy)return; reloadBusy=true; $('check-cache').disabled=true;
-    let remaining=2, failed=false;
+    let remaining=2;
     for(const file of ['latest.js','status.js']){
       const script=document.createElement('script'); script.src=`data/${file}?t=${Date.now()}`;
-      const finish=()=>{script.remove(); if(--remaining===0){reloadBusy=false;$('check-cache').disabled=false;if(failed){$('sync-status').textContent='Snapshot tertanam aktif · folder cache tidak dapat dibaca';$('sync-status').className='warning';}}};
-      script.onload=finish;script.onerror=()=>{failed=true;finish();};document.body.append(script);
+      let finished=false,timer=null;
+      const finish=ok=>{if(finished)return;finished=true;clearTimeout(timer);script.onload=null;script.onerror=null;script.remove();if(ok)cacheLoadFailures.delete(file);else cacheLoadFailures.add(file);if(--remaining===0){reloadBusy=false;$('check-cache').disabled=false;}updateStatus();};
+      timer=setTimeout(()=>finish(false),15000);
+      script.onload=()=>finish(true);script.onerror=()=>finish(false);document.body.append(script);
     }
   }
   for(const link of document.querySelectorAll('nav a'))link.addEventListener('click',()=>setTimeout(view,0));
@@ -223,8 +236,8 @@
   $('close-dialog').addEventListener('click',()=>$('match-dialog').close());
   $('detail-content').addEventListener('click',e=>{const button=e.target.closest('[data-round-info]');if(!button)return;const r=data.rounds.find(row=>row.id===Number(button.dataset.roundInfo));if(!r)return;const readout=$('round-readout-'+r.gameId);if(readout)readout.textContent=`Ronde ${r.index}: ${C.teamName(data,r.winnerId)} menang. Penyerang: ${C.teamName(data,r.attackerId)}. Bertahan: ${C.teamName(data,r.defenderId)}.`;});
   $('predict').addEventListener('click',predict);
-  $('swap-teams').addEventListener('click',()=>{const a=$('forecast-a').value;$('forecast-a').value=$('forecast-b').value;$('forecast-b').value=a;if(forecastShown)predict();});
-  for(const id of ['forecast-a','forecast-b'])$(id).addEventListener('change',()=>{if(forecastShown)predict();});
+  $('swap-teams').addEventListener('click',()=>{const a=$('forecast-a').value;$('forecast-a').value=$('forecast-b').value;$('forecast-b').value=a;clearForecast('Tim ditukar. Tekan “Lihat perkiraan peluang” untuk menghitung pilihan ini.');});
+  for(const id of ['forecast-a','forecast-b'])$(id).addEventListener('change',()=>clearForecast('Pilihan tim berubah. Tekan “Lihat perkiraan peluang” untuk menghitung pilihan ini.'));
   $('export').addEventListener('click',()=>{const rows=filtered.map(m=>({match_id:m.id,date_utc:m.date,competition:data.competitions[m.competitionId]?.name,team_a:C.teamName(data,m.teamA),team_b:C.teamName(data,m.teamB),score_a:m.scoreA,score_b:m.scoreB,completed:m.completed,winner:m.winnerId?C.teamName(data,m.winnerId):null,detailed:m.detailed,source_url:data.meta.sourceBase+m.source}));const blob=new Blob([C.csv(rows)],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`r6-official-matches-${new Date(data.meta.generatedAt).toISOString().slice(0,10)}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   $('check-cache').addEventListener('click',loadCache);
   for(const id of ['operator-side','operator-sort','operator-min'])$(id).addEventListener('change',renderOperators);
@@ -255,7 +268,7 @@
     if(button.hasAttribute('data-team-history')){const id=button.dataset.teamHistory;if(!data.teams[id])return;resetMain();$('team-filter').value=id;render();navigate('matches');toast('Riwayat '+C.teamName(data,id)+' ditampilkan dari seluruh data tersimpan.');}
   });
   $('export-operators').addEventListener('click',()=>{const rows=C.operatorStats(operators,operatorFilter()).map(r=>({operator:r.operator,side:r.side,team:r.team,picks:r.picks,round_wins:r.wins,round_win_rate:r.winRate,side_rounds:r.sideRounds,presence:r.presence,source_url:operators.source.url,captured_at:operators.source.capturedAt}));const url=URL.createObjectURL(new Blob([C.csv(rows)],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download='r6-operators-slc-2026.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-  window.addEventListener('r6-update',()=>{try{accept(window.R6_LATEST);}catch(e){$('sync-status').textContent=`Cache baru ditolak: ${e.message}`;$('sync-status').className='error';}});
+  window.addEventListener('r6-update',()=>{try{accept(window.R6_LATEST);}catch(e){cacheRejection=e.message;updateStatus();}});
   window.addEventListener('r6-status',()=>{if(started)updateStatus();});
   try{C.validateOperators(operators);accept(JSON.parse($('dataset').textContent),true);started=true;view();loadCache();setInterval(loadCache,60000);setInterval(updateStatus,60000);}catch(e){$('fatal').hidden=false;$('fatal').textContent=`Snapshot tidak dapat ditampilkan: ${e.message}`;}
 })();

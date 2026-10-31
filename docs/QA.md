@@ -1,6 +1,6 @@
 # QA prototype
 
-Status pembaruan 31 Oktober 2026: **validasi sumber hasil/operator lulus, 21 tes otomatis lulus; QA visual browser masih terbuka**. Ini prototype yang bisa ditinjau, belum pernyataan kesiapan produksi.
+Status pembaruan 31 Oktober 2026: **validasi sumber hasil/operator lulus, 26 tes otomatis lulus; QA visual browser masih terbuka**. Ini prototype yang bisa ditinjau, belum pernyataan kesiapan produksi.
 
 ## Yang teruji
 
@@ -29,6 +29,13 @@ Status pembaruan 31 Oktober 2026: **validasi sumber hasil/operator lulus, 21 tes
 19. Filter peta menjaga grain pertandingan dan membatasi peta, ronde, pemain, serta ban pada peta yang dipilih.
 20. Filter minggu dan gabungan kompetisi/tim/peta hanya mengembalikan tanggal sumber dalam jendela tujuh hari UTC yang benar.
 21. Alur pembaca baru: panduan, pencarian kamus, tab bantuan via keyboard, preset, detail/perbandingan operator, filter peta/minggu, hapus label, tukar tim, serta riwayat tim. Data tertanam tidak berubah akibat interaksi.
+22. Peluang hanya dihitung lewat tombolnya, termasuk ketika masuk dari pintasan atau panduan; perubahan pilihan dan pertukaran tim tidak menghitung ulang otomatis.
+23. Cache identik mempertahankan hasil yang diminta pengguna; snapshot baru menghapus hasil tersebut dan meminta klik ulang.
+24. Cache rusak atau lebih lama ditolak; status sukses tidak menutupi penolakan dan data yang sedang tampil tetap dipertahankan.
+25. Pembacaan cache yang macet melepas tombol setelah timeout 15 detik; respons ganda tidak merusak hitungan proses dan pembacaan berikutnya dapat pulih.
+26. Ekspor pertandingan kosong dinonaktifkan; tim dengan sampel kecil tetap mendapat pratinjau favorit faktual tanpa batas 30 tersembunyi.
+
+Audit terperinci: [UI_AUDIT.md](UI_AUDIT.md). Pengujian timer memakai kontrol waktu di lingkungan tes, bukan menunggu atau merekayasa statistik produksi.
 
 Uji DOM juga mencakup navigasi Operator intel, pergantian sort, minimum sampel, pencarian, CSV operator, dan kondisi event yang belum tersedia. Font dan ikon tertanam agar tidak mengandalkan CDN saat demo dibuka. Palet diperbarui sesuai preferensi gelap dengan kontras lembut dan nuansa tactical esports.
 

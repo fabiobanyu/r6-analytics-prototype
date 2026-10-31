@@ -78,7 +78,7 @@ python scripts/update_data.py --watch
 python scripts/update_data.py --force
 ```
 
-Di Windows, klik **`Jalankan Pembaruan Otomatis.cmd`** atau **`Perbarui Data Sekarang.cmd`**. Launcher memakai `py -3`; gunakan perintah `python` jika Python Launcher tidak terpasang.
+Di Windows, klik **`Jalankan Pembaruan Otomatis.cmd`** atau **`Perbarui Data Sekarang.cmd`**. Launcher memakai `python` dari PATH. Pemeriksaan lokal menemukan Python 3.14 tersedia melalui perintah ini, sementara `py -3` tidak mengenali instalasinya.
 
 Pembaru menemukan musim aktif dari navigasi resmi, memeriksa kompetisi dan fase, lalu menambahkan maksimal 80 halaman detail baru per siklus. Halaman indeks menggunakan cache 6 jam; detail series selesai diperiksa ulang setelah 7 hari. Maksimal 3 koneksi bersamaan, timeout 35 detik, dan maksimal 3 percobaan. Ini polling, bukan feed langsung.
 
@@ -114,7 +114,9 @@ npm test
 node scripts/analyze.cjs
 ```
 
-21 pengujian otomatis lulus setelah pembaruan interaksi: keunikan ID/grain, provenance, kebocoran label, batch timestamp sama, baseline, nilai kosong/0, filter, navigasi, detail, estimasi, CSV, refresh cache, cache rusak, jaringan gagal, perbedaan pemilihan/menang/win rate, pemisahan cohort, minimum sampel, peta ban unik, konsistensi filter peta/minggu, serta alur pengguna baru. Validator mencocokkan statistik dengan ekstrak sumbernya masing-masing.
+26 pengujian otomatis lulus setelah audit interaksi: keunikan ID/grain, provenance, kebocoran label, batch timestamp sama, baseline, nilai kosong/0, filter, navigasi, detail, estimasi, CSV, refresh cache, cache rusak, jaringan gagal, perbedaan pemilihan/menang/win rate, pemisahan cohort, minimum sampel, peta ban unik, konsistensi filter peta/minggu, serta alur pengguna baru. Tes regresi memastikan peluang hanya muncul setelah tombol ditekan, hasil lama dihapus saat pilihan berubah, cache lama ditolak, pesan kegagalan tidak tertimpa sukses, timeout dapat pulih, dan ekspor kosong dinonaktifkan. Validator mencocokkan statistik dengan ekstrak sumbernya masing-masing.
+
+Pintasan perbandingan tim hanya menyiapkan pilihan; **peluang tidak dihitung otomatis**. Baca [audit perilaku antarmuka](docs/UI_AUDIT.md) untuk temuan dan perbaikannya.
 
 Uji UI memakai **jsdom**, bukan browser visual. Browser pengujian menolak `file://`; tampilan responsif, dialog native, dan unduhan browser masih memerlukan verifikasi manual. [Checklist QA](docs/QA.md) mencatat batas pengujian ini. GitHub Actions hanya melakukan validasi dan tes, tanpa deployment.
 
