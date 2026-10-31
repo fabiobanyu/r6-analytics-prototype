@@ -18,6 +18,7 @@ jobs:
           python-version: '3.14'
       - run: npm ci --ignore-scripts
       - run: python scripts/validate_data.py
+      - run: python scripts/validate_operators.py
       - run: python scripts/build.py
       - run: npm test
       # No deployment, Pages, external database, or fabricated data generation.

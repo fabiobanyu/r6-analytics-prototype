@@ -13,7 +13,9 @@
 
 Prototype analisis Rainbow Six Siege esports oleh **Fabio Banyu Cyto**. Jelajahi hasil pertandingan asli, lihat pola kemenangan peta, telusuri statistik pemain, dan periksa baseline prediksi Elo beserta evaluasinya. Seluruh antarmuka berjalan sebagai HTML lokal.
 
-**Tidak ada data pertandingan sintetis.** Hasil, ronde, pemain, dan operator ban berasal dari halaman publik resmi [Ubisoft R6 Esports](https://www.ubisoft.com/en-us/esports/rainbow-six/siege/competition/502). Estimasi model ditandai terpisah dari hasil pertandingan dan tidak menulis hasil baru ke dataset.
+**Tidak ada data pertandingan sintetis.** Hasil, ronde, pemain, dan operator ban berasal dari halaman publik resmi [Ubisoft R6 Esports](https://www.ubisoft.com/en-us/esports/rainbow-six/siege/competition/502). Pilihan operator dan ronde menang memakai snapshot tambahan [r6tv Salt Lake City Major](https://r6tv.online/event/salt-lake-city-major), dengan cakupan terpisah. Estimasi model ditandai terpisah dari hasil pertandingan dan tidak menulis hasil baru ke dataset.
+
+Desain memakai nuansa tactical esports dengan latar biru baja, kontras lembut, aksen amber/teal, font Manrope dan Barlow Condensed yang disimpan lokal, serta ikon operator resmi. Komposisi antarmukanya dibuat sendiri.
 
 ## Coba dalam satu langkah
 
@@ -27,6 +29,8 @@ HTML berisi snapshot tertanam sehingga bisa dibuka sendiri. Simpan folder `data/
 |---|---|
 | Ringkasan & tren | Series selesai per minggu, peta selesai, detail terunduh, ronde tercatat |
 | Map intelligence | Kemenangan sisi serang dari ID penyerang dan pemenang ronde asli |
+| Operator intel | Favorit berdasarkan pemilihan, ronde menang terbanyak, win rate, minimum sampel, filter sisi/tim, serta ekspor CSV |
+| Ban pressure | Operator diban per peta unik, terpisah dari statistik pemilihan |
 | Match explorer | Filter kompetisi/tim, pencarian, pagination, skor, detail ronde & pemain |
 | Team form | Elo per series, tanpa penghitungan ulang akibat baris pemain |
 | Player records | Kill, K/D, KOST tertimbang ronde dalam cakupan filter |
@@ -53,6 +57,8 @@ Cakupan mencakup event global musim 2026–2027 serta stage regional yang ditamp
 
 Angka di atas merupakan ringkasan snapshot awal, bukan angka yang dijanjikan selalu tetap. Lihat `data/snapshot.json`, antarmuka, dan [manifest data](docs/DATA.md) untuk versi terbaru.
 
+Snapshot operator tambahan mencakup 73 operator/sisi, 886 pengamatan ronde serang dan 887 bertahan pada SLC Major. Deimos paling sering dipilih untuk menyerang (308), Smoke untuk bertahan (382) sekaligus mencatat ronde menang terbanyak (198). Dengan minimum 30 pemilihan, win rate tertinggi adalah Pulse, 35/52 = 67,3%. Ini statistik ronde dalam cakupan replay sumber, bukan kemenangan series atau bukti operator menyebabkan kemenangan. Lihat [metode dan provenance operator](docs/OPERATORS.md).
+
 ## Pembaruan otomatis
 
 Python **3.11+**, standard library saja, diperlukan untuk memperbarui data.
@@ -76,6 +82,8 @@ HTML yang terbuka memeriksa `data/latest.js` dan `data/status.js` setiap 60 deti
 
 Komputer, internet, dan proses pembaru perlu aktif. Jika menggunakan penjadwal lain, jalankan pembaruan sekali per 6 jam; jangan jalankan bersamaan dengan `--watch`. Kunci satu penulis mencegah dua pembaru menimpa snapshot. Perubahan sumber atau kegagalan validasi mempertahankan snapshot terakhir dan menulis status gagal. Pembaruan lokal tidak melakukan commit atau push GitHub.
 
+**Pembaruan otomatis ini berlaku untuk hasil dan ban Ubisoft. Snapshot pemilihan operator r6tv diperbarui terpisah melalui impor sumber terverifikasi; tidak di-scrape berkala dan tidak diklaim mencakup semua event.** Cakupan serta tanggalnya selalu ditampilkan pada panel.
+
 ## Hasil model: eksplorasi, belum bukti prediksi kuat
 
 Elo awal 1500, K=24, skala 400; parameter tidak dituning. Dua series forfeit dikeluarkan dari pelatihan/evaluasi. Prediksi tiap timestamp dibuat sebelum hasil pada timestamp itu dipakai. Evaluasi membutuhkan minimal 3 series sebelumnya per tim; perbandingan tim baru membutuhkan minimal 5.
@@ -94,6 +102,7 @@ Node **24.15+** (atau versi yang sesuai `engines` dalam `package.json`) diperluk
 
 ```powershell
 python scripts/validate_data.py
+python scripts/validate_operators.py
 python scripts/build.py
 python scripts/export_data.py
 npm ci --ignore-scripts
@@ -101,7 +110,7 @@ npm test
 node scripts/analyze.cjs
 ```
 
-13 pengujian otomatis lulus pada snapshot awal: keunikan ID/grain, provenance, kebocoran label, batch timestamp sama, baseline, nilai kosong/0, filter, navigasi, detail, estimasi, CSV, refresh cache, cache rusak, dan jaringan gagal. Validator mencocokkan seluruh hasil/statistik ternormalisasi dengan ekstrak sumber terunduh.
+18 pengujian otomatis lulus setelah pembaruan operator: keunikan ID/grain, provenance, kebocoran label, batch timestamp sama, baseline, nilai kosong/0, filter, navigasi, detail, estimasi, CSV, refresh cache, cache rusak, jaringan gagal, perbedaan pemilihan/menang/win rate, pemisahan cohort, minimum sampel, dan peta ban unik. Validator mencocokkan statistik dengan ekstrak sumbernya masing-masing.
 
 Uji UI memakai **jsdom**, bukan browser visual. Browser pengujian menolak `file://`; tampilan responsif, dialog native, dan unduhan browser masih memerlukan verifikasi manual. [Checklist QA](docs/QA.md) mencatat batas pengujian ini. GitHub Actions hanya melakukan validasi dan tes, tanpa deployment.
 
@@ -116,6 +125,8 @@ scripts/build.py           Bangun ulang HTML tanpa dependensi Python eksternal
 scripts/export_data.py     Ekspor tabel ke CSV
 scripts/analyze.cjs        Evaluasi, grafik SVG, dan laporan HTML
 data/snapshot.json         Dataset terstruktur + metadata + manifest
+data/operators.json        Snapshot operator tambahan + metadata sumber/cakupan
+data/operator_sources/     Ekstrak board operator yang dapat diperiksa ulang
 data/raw/*.json.gz         Ekstrak sumber resmi, diberi nama SHA-256
 data/*.csv                 Tabel series, peta, ronde, pemain, operator ban
 outputs/                   Laporan, hasil validasi, analisis, grafik

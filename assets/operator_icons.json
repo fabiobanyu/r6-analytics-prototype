@@ -1,0 +1,338 @@
+{
+  "Ace": {
+    "file": "assets/operators/a467da82da54.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/ace-icon.png",
+    "sha256": "6c8ab6a70d8820a0ff79ca8ec4426a84e02abf82cd083ce4475a49ab9ed4adc9",
+    "retrievedAt": "2026-10-31T01:33:38.014648+00:00"
+  },
+  "Thermite": {
+    "file": "assets/operators/bb84a041cf90.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/thermite-icon.png",
+    "sha256": "94fa4a99eb5bafc141b682ec1925ef546b805d706fdd22787faa0812ff278676",
+    "retrievedAt": "2026-10-31T01:33:38.015194+00:00"
+  },
+  "Grim": {
+    "file": "assets/operators/fcf9d705ef32.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/grim-icon.png",
+    "sha256": "6e9960bba1d9457b62d9d81426ded2e4c557dbd7b66008abefa52791fef530bf",
+    "retrievedAt": "2026-10-31T01:33:38.015890+00:00"
+  },
+  "Kaid": {
+    "file": "assets/operators/609a88e77bdb.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/kaid-icon.png",
+    "sha256": "ded30a0df0d7ebf61416e18360aa2c7177866978d748f7e5531ca2b689403492",
+    "retrievedAt": "2026-10-31T01:33:39.181809+00:00"
+  },
+  "Mira": {
+    "file": "assets/operators/ef9ee12da914.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/mira-icon.png",
+    "sha256": "d2477b12434f3d1e997217ed32bfae7aaef32837efd1031d7ba6197d9bb3ac7d",
+    "retrievedAt": "2026-10-31T01:33:39.182332+00:00"
+  },
+  "Bandit": {
+    "file": "assets/operators/9b9e42be5c57.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/bandit-icon.png",
+    "sha256": "0a6aa63728628e88a9e1b226c26e1649bea9e32b01e284fff60c4b913e718ab7",
+    "retrievedAt": "2026-10-31T01:33:39.236308+00:00"
+  },
+  "Nomad": {
+    "file": "assets/operators/b156d00c72a7.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/nomad-icon.png",
+    "sha256": "cf3590e46a7b1ecfe0ed16c90a27615a0c6f0d7016f0b4ae1a8d7841051a5ce3",
+    "retrievedAt": "2026-10-31T01:33:40.178134+00:00"
+  },
+  "Montagne": {
+    "file": "assets/operators/f9ee89a1429c.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/montagne-icon.png",
+    "sha256": "cd34e44f83f7be676e36c3c2220ad92c2af64abebd93d333003a5b7d9506887b",
+    "retrievedAt": "2026-10-31T01:33:40.178664+00:00"
+  },
+  "Goyo": {
+    "file": "assets/operators/49290f2c5e94.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/goyo-icon.png",
+    "sha256": "c60fff46a2d536f953c7940d53b5b4bebfdd7fa0cde4fb9969197de555032df7",
+    "retrievedAt": "2026-10-31T01:33:40.209769+00:00"
+  },
+  "Solid Snake": {
+    "file": "assets/operators/a353adee75af.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/solidsnake-icon.png",
+    "sha256": "a0e32e1cbc998e7a5d4b57ddebe6ad71c709e3eaa9b30907ddf13445ef7cfe96",
+    "retrievedAt": "2026-10-31T01:33:41.260357+00:00"
+  },
+  "Deimos": {
+    "file": "assets/operators/8915eff1e30c.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/deimos-icon.png",
+    "sha256": "80ad6860746df4784070626b3aae1cbda91b56b7b70cfaeee60c09263a97bb78",
+    "retrievedAt": "2026-10-31T01:33:41.260997+00:00"
+  },
+  "Capitão": {
+    "file": "assets/operators/65ccbd007080.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/capitão-icon.png",
+    "sha256": "90e8a4505ad0058681ca353d6237963eef573b8780610ee65c9095473b5c597a",
+    "retrievedAt": "2026-10-31T01:33:41.261419+00:00"
+  },
+  "Blitz": {
+    "file": "assets/operators/ca6744f733d5.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/blitz-icon.png",
+    "sha256": "d56f01d52b823f51d6815df0c856b56b00be242096fce289bc203e76d1ab4b39",
+    "retrievedAt": "2026-10-31T01:33:42.261658+00:00"
+  },
+  "Wamai": {
+    "file": "assets/operators/2d4e6da1028a.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/wamai-icon.png",
+    "sha256": "01e8c779fe844d10e26a88a841bf32a494a6fc5bdae888b02c6da4de1ea51205",
+    "retrievedAt": "2026-10-31T01:33:42.262089+00:00"
+  },
+  "Echo": {
+    "file": "assets/operators/8335e4c92c40.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/echo-icon.png",
+    "sha256": "e36be50616fd35b5ebdddd44f2fcfb9803e738567a37d54d763bcd5d8e186e1d",
+    "retrievedAt": "2026-10-31T01:33:42.410753+00:00"
+  },
+  "Azami": {
+    "file": "assets/operators/c853d564dd28.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/azami-icon.png",
+    "sha256": "9cfcd4786008d49a9292ffd38572f3f6d54597b77111a35db1fb882142302aba",
+    "retrievedAt": "2026-10-31T01:33:43.172619+00:00"
+  },
+  "Hibana": {
+    "file": "assets/operators/5a1a6e7523e7.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/hibana-icon.png",
+    "sha256": "e2eb7dbfc1ed11dd1537d24a742d8f02ad2054bfc705cd4b42b8e5828adf6616",
+    "retrievedAt": "2026-10-31T01:33:43.364283+00:00"
+  },
+  "Thatcher": {
+    "file": "assets/operators/7a4be9e0265b.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/thatcher-icon.png",
+    "sha256": "c0936b1365e47097d09a6ea24875142c7039586f41667b55b6166de1a6ff8fdc",
+    "retrievedAt": "2026-10-31T01:33:43.506623+00:00"
+  },
+  "Clash": {
+    "file": "assets/operators/11ce6c777cfd.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/clash-icon.png",
+    "sha256": "78620cac71696433b39155619a09ba5d67d79d01c83aa81ed6728185b1a8ed30",
+    "retrievedAt": "2026-10-31T01:33:44.343561+00:00"
+  },
+  "Jager": {
+    "file": "assets/operators/05b4f0481d4e.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/jager-icon.png",
+    "sha256": "a10569ba03b9ea27a81b77d759e5dbd226188b0f7a90cbe7dd294d69b165ce43",
+    "retrievedAt": "2026-10-31T01:33:45.342710+00:00"
+  },
+  "Glaz": {
+    "file": "assets/operators/afdd1d12b7c6.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/glaz-icon.png",
+    "sha256": "7278e715ba9da0242a0d6225a7982777f7017f5e72d423d10633e2087e4e1dc5",
+    "retrievedAt": "2026-10-31T01:33:45.343322+00:00"
+  },
+  "Valkyrie": {
+    "file": "assets/operators/f4fc2b23c5e1.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/valkyrie-icon.png",
+    "sha256": "ab3ec1b10b51a01f58229cada2077c76eca024662ff5e38caf2019c1d6e3cc9b",
+    "retrievedAt": "2026-10-31T01:33:45.542810+00:00"
+  },
+  "Tubarão": {
+    "file": "assets/operators/8f94dc316e6c.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/tubarão-icon.png",
+    "sha256": "c2f907c57a0718e2a4eb5c893d3807116ad3213c2eebb422e554852fe12c7813",
+    "retrievedAt": "2026-10-31T01:33:45.543526+00:00"
+  },
+  "Mute": {
+    "file": "assets/operators/8dd6857baf02.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/mute-icon.png",
+    "sha256": "096969a2c695708d9af725241a58f067dc83c07bcd0e2a3e1ac04cc2b6ff0453",
+    "retrievedAt": "2026-10-31T01:33:46.121804+00:00"
+  },
+  "Twitch": {
+    "file": "assets/operators/a731a58c4cf3.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/twitch-icon.png",
+    "sha256": "e2515b575975a53b4a9d32f9acbf33fa419ab792d5c2ee5f8d23b66f09a4439e",
+    "retrievedAt": "2026-10-31T01:33:46.345776+00:00"
+  },
+  "Ying": {
+    "file": "assets/operators/0cbca008c28e.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/ying-icon.png",
+    "sha256": "46e8d89be8c479013e208c1255acb90eef3f7d6292d03f712d8be33eec0409f5",
+    "retrievedAt": "2026-10-31T01:33:46.401657+00:00"
+  },
+  "Pulse": {
+    "file": "assets/operators/f7a403c6cdf3.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/pulse-icon.png",
+    "sha256": "eebad0d0f740ad54381bfcd2b1cd410dd79ea52b5a7d291e5a283263f3cc98bd",
+    "retrievedAt": "2026-10-31T01:33:47.495896+00:00"
+  },
+  "Gridlock": {
+    "file": "assets/operators/2b0b47ed1df0.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/gridlock-icon.png",
+    "sha256": "0626945018471533cfbf6fe5d3953cc29397b1419deb10d3bae324da30ad287c",
+    "retrievedAt": "2026-10-31T01:33:47.496383+00:00"
+  },
+  "Lion": {
+    "file": "assets/operators/ffee89e3ddeb.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/lion-icon.png",
+    "sha256": "bb070160b2845cc63c4ba10036aab05128f5d6ff9a8444e7bcc74492006b1bbd",
+    "retrievedAt": "2026-10-31T01:33:47.496818+00:00"
+  },
+  "Castle": {
+    "file": "assets/operators/419fb3b818e6.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/castle-icon.png",
+    "sha256": "d5767db21a766ffc59fcfc5d319699441660a3988a227e8ee263804bec1ee5eb",
+    "retrievedAt": "2026-10-31T01:33:48.167382+00:00"
+  },
+  "Solis": {
+    "file": "assets/operators/7fc5e56ec97a.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/solis-icon.png",
+    "sha256": "f9cdf9a15255a284e6618fcfff4fb1b788c4d4dce30db768c7240b3de2d4c81b",
+    "retrievedAt": "2026-10-31T01:33:48.336892+00:00"
+  },
+  "Noor": {
+    "file": "assets/operators/e87bb80fb88e.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/noor-icon.png",
+    "sha256": "6aeefc1a649a036d3265375c298559b81288843fa652a06dd2ddefa8de5ca1e6",
+    "retrievedAt": "2026-10-31T01:33:48.337421+00:00"
+  },
+  "IQ": {
+    "file": "assets/operators/e6e28b6c2e8c.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/iq-icon.png",
+    "sha256": "50d6648ee82c490fa8499dac79b3f1ce98f25e11ffb47847a13ef1c0f216041d",
+    "retrievedAt": "2026-10-31T01:33:49.225165+00:00"
+  },
+  "Zofia": {
+    "file": "assets/operators/d980ff470367.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/zofia-icon.png",
+    "sha256": "47f4377ed70c9114f329ca055f9005b00d6da8f50672d80369935e3f41efcfc5",
+    "retrievedAt": "2026-10-31T01:33:49.344236+00:00"
+  },
+  "Warden": {
+    "file": "assets/operators/81258b7c45d5.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/warden-icon.png",
+    "sha256": "ae8e17d1a067622c2e2083633680535007b1cad2723be4468682e94e695fb19a",
+    "retrievedAt": "2026-10-31T01:33:49.477871+00:00"
+  },
+  "Ela": {
+    "file": "assets/operators/e65b73da8397.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/ela-icon.png",
+    "sha256": "fd85851e29341aa905965612d179a38b2b0e86e857ed9e8f21f64473a6e9db59",
+    "retrievedAt": "2026-10-31T01:33:50.492314+00:00"
+  },
+  "Kali": {
+    "file": "assets/operators/0200603f6cb0.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/kali-icon.png",
+    "sha256": "ea43fbd40df3c768750b2ed4ae1afc3b813e7906f19067a59af38f13e4021bea",
+    "retrievedAt": "2026-10-31T01:33:50.492892+00:00"
+  },
+  "Smoke": {
+    "file": "assets/operators/29b52bfcccd0.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/smoke-icon.png",
+    "sha256": "97d029ce45b00ab921550c3fe7c019141c5cc6979e9137384fd310259ae147b0",
+    "retrievedAt": "2026-10-31T01:33:50.525170+00:00"
+  },
+  "Blackbeard": {
+    "file": "assets/operators/29bed5b6c5b7.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/blackbeard-icon.png",
+    "sha256": "a292ef9cad4575d26b964517b0cd351097ecfd1e863d247ad40e7b2a1774b81c",
+    "retrievedAt": "2026-10-31T01:33:51.372123+00:00"
+  },
+  "Tachanka": {
+    "file": "assets/operators/9018c41ba7d4.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/tachanka-icon.png",
+    "sha256": "ca286390c4ad2310c92d37288995a1cc994be8e9eaf734a036da0c2972d8ae44",
+    "retrievedAt": "2026-10-31T01:33:51.646278+00:00"
+  },
+  "Thorn": {
+    "file": "assets/operators/9c5396f2c74a.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/thorn-icon.png",
+    "sha256": "12d5fbd285b8b203c4bf95bdaef1e63c85c124807a5363fa225220d6a9e6fba9",
+    "retrievedAt": "2026-10-31T01:33:51.646867+00:00"
+  },
+  "Striker": {
+    "file": "assets/operators/d29a06495a12.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/striker-icon.png",
+    "sha256": "0889bb872dafb72936d06a5bf634027bf6b36c86ec7a50b987ac09a6b5451d52",
+    "retrievedAt": "2026-10-31T01:33:52.234616+00:00"
+  },
+  "Denari": {
+    "file": "assets/operators/3b76e0057fd1.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/denari-icon.png",
+    "sha256": "95f25fd45b1d4738b0fe3d93b9e06ff640d786cf16e14aad84afe3ae00fefb32",
+    "retrievedAt": "2026-10-31T01:33:52.685630+00:00"
+  },
+  "Ram": {
+    "file": "assets/operators/76e11af94d35.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/ram-icon.png",
+    "sha256": "78a1e857d717d0260edeb18548fab09bb5a9051f7125b1a240698dc32f3a44e8",
+    "retrievedAt": "2026-10-31T01:33:53.064276+00:00"
+  },
+  "Fenrir": {
+    "file": "assets/operators/98250a10bcfa.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/fenrir-icon.png",
+    "sha256": "23065fe5c212e1aedef71cafb2dd8439c2885b45dc4d489a4a05689f534775f4",
+    "retrievedAt": "2026-10-31T01:33:53.177121+00:00"
+  },
+  "Dokkaebi": {
+    "file": "assets/operators/d92a56162af1.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/dokkaebi-icon.png",
+    "sha256": "6a091ee107f5510bbc227baee456d55b40b250d8bc09b0ebe8c6ebb73c7ec5f1",
+    "retrievedAt": "2026-10-31T01:33:53.859529+00:00"
+  },
+  "Sens": {
+    "file": "assets/operators/741e8c5450cd.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/sens-icon.png",
+    "sha256": "bf1f46c5ac60953ff93d83aa1909461aa79acfebba9c98f3d134fc99ee02bd23",
+    "retrievedAt": "2026-10-31T01:33:54.304771+00:00"
+  },
+  "Flores": {
+    "file": "assets/operators/c57a18347626.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/flores-icon.png",
+    "sha256": "372cc7ccfef6df7c2bef6ab238f1fc8d86ba3ae40c0c4c1db39715773fe6c75d",
+    "retrievedAt": "2026-10-31T01:33:54.435530+00:00"
+  },
+  "Maverick": {
+    "file": "assets/operators/1aadcb767330.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/maverick-icon.png",
+    "sha256": "6f53e4e1d696252c3520570967b178981bf9e2cc147f287e3ba5759df8605a86",
+    "retrievedAt": "2026-10-31T01:33:54.850164+00:00"
+  },
+  "Vigil": {
+    "file": "assets/operators/b621de5fcb92.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/vigil-icon.png",
+    "sha256": "23c9d7e8f8cb575d13e09e0eb177e656a50013fe49d0c311b6cf79d966aa2ab2",
+    "retrievedAt": "2026-10-31T01:33:55.547781+00:00"
+  },
+  "Maestro": {
+    "file": "assets/operators/ef2977bc573a.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/maestro-icon.png",
+    "sha256": "fd5826a3f5839ae94ac667c47af3da8bc99c5d348e641cd5b9fff6f89514994c",
+    "retrievedAt": "2026-10-31T01:33:55.548437+00:00"
+  },
+  "Brava": {
+    "file": "assets/operators/699b3e454a7b.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/brava-icon.png",
+    "sha256": "7ce6de38cc9cbfc1e34b45c35efdb35bd9640d7c27e76a928d508ec88d152627",
+    "retrievedAt": "2026-10-31T01:33:55.775725+00:00"
+  },
+  "Fuze": {
+    "file": "assets/operators/35f243d9e0f6.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/fuze-icon.png",
+    "sha256": "bf3abfb7e24b501e2095c094363aa95398a6e37bdd92421c4db9a1ca4a47719f",
+    "retrievedAt": "2026-10-31T01:33:56.421683+00:00"
+  },
+  "Melusi": {
+    "file": "assets/operators/7080d69ed5d9.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/melusi-icon.png",
+    "sha256": "6f102b809c9f2f81ba8d52caba6f79fc42c5306d9ecef4b800ffda8dcf3ed95c",
+    "retrievedAt": "2026-10-31T01:33:56.682037+00:00"
+  },
+  "Aruni": {
+    "file": "assets/operators/9bf267fd60e8.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/aruni-icon.png",
+    "sha256": "86fc8405f8df84aa89489292ffe3c889098eb2128b5468c1009cae31791c2ad4",
+    "retrievedAt": "2026-10-31T01:33:56.683497+00:00"
+  },
+  "Mozzie": {
+    "file": "assets/operators/661759961c56.png",
+    "url": "https://static-esports.ubisoft.com/esports-platform/r6s/operators/mozzie-icon.png",
+    "sha256": "93481bb560e208869ba6820a7c9ce401ff3ebf109351d876df0b57dfcaf8a232",
+    "retrievedAt": "2026-10-31T01:33:57.578521+00:00"
+  }
+}

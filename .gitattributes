@@ -10,3 +10,5 @@
 *.csv text eol=crlf
 *.cmd text eol=crlf
 *.gz -text
+*.png -text
+*.ttf -text

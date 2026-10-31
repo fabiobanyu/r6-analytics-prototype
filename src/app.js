@@ -5,6 +5,8 @@
   const num=value=>new Intl.NumberFormat('id-ID').format(value);
   const pct=value=>value==null?'—':`${(100*value).toFixed(1)}%`;
   const date=(value,short=false)=>new Intl.DateTimeFormat('id-ID',{timeZone:'UTC',day:'2-digit',month:short?'short':'long',year:'numeric',...(short?{}:{hour:'2-digit',minute:'2-digit'})}).format(new Date(value));
+  const operators=JSON.parse($('operator-dataset').textContent),icons=JSON.parse($('visual-assets').textContent);
+  const operatorIcon=(name,extra='')=>icons[name]?`<span class="operator-icon ${extra}"><img src="${icons[name]}" alt="" width="48" height="48"></span>`:`<span class="operator-icon operator-fallback ${extra}" aria-hidden="true">${esc(name.slice(0,2).toUpperCase())}</span>`;
   let data, page=0, filtered=[], model, reloadBusy=false, started=false;
   const pageSize=20;
   const filters=()=>({event:$('event-filter').value,team:$('team-filter').value,search:$('search').value.trim()});
@@ -23,10 +25,10 @@
   function render() {
     filtered=C.subset(data,filters()).sort((a,b)=>Date.parse(b.date)-Date.parse(a.date)||b.id-a.id);
     const s=C.summarize(data,filtered);
-    const cards=[['SERIES SELESAI',s.played,`${num(s.upcoming)} terjadwal dengan tim diketahui`],['PETA SELESAI',s.games,'Tidak termasuk peta yang belum dimainkan'],['DETAIL SERIES',s.detailed,`${pct(s.played?s.detailed/s.played:null)} dari series dalam filter`],['RONDE TERCATAT',s.rounds,'Hanya dari halaman detail terunduh']];
+    const cards=[['Series selesai',s.played,`${num(s.upcoming)} jadwal dengan tim diketahui`],['Peta selesai',s.games,'Hanya peta yang selesai dimainkan'],['Detail series',s.detailed,`${pct(s.played?s.detailed/s.played:null)} dari series dalam filter`],['Ronde tercatat',s.rounds,'Dari halaman detail terunduh']];
     $('kpis').innerHTML=cards.map(([label,value,note])=>`<article class="kpi"><span>${label}</span><strong>${num(value)}</strong><small>${esc(note)}</small></article>`).join('');
     const max=Math.max(1,...s.weekly.map(w=>w[1]));
-    $('timeline').innerHTML=s.weekly.length?s.weekly.map(([week,count])=>`<div class="week" style="height:${Math.max(2,count/max*100)}%" title="Minggu ${week}: ${count} series"></div>`).join(''):'<div class="empty">Tidak ada series selesai dalam filter.</div>';
+    $('timeline').innerHTML=s.weekly.length?s.weekly.map(([week,count])=>`<div class="week" style="height:${count?Math.max(2,count/max*100):0}%" title="Minggu ${week}: ${count} series"></div>`).join(''):'<div class="empty">Tidak ada series selesai dalam filter.</div>';
     $('timeline').setAttribute('aria-label',s.weekly.map(([w,n])=>`${w}: ${n} series`).join('; ')||'Tidak ada data');
     $('timeline').nextElementSibling?.classList.contains('timeline-axis') && $('timeline').nextElementSibling.remove();
     if(s.weekly.length) $('timeline').insertAdjacentHTML('afterend',`<div class="timeline-axis"><span>${s.weekly[0][0]}</span><span>${s.weekly.at(-1)[0]}</span></div>`);
@@ -36,6 +38,42 @@
     const players=C.playerLeaders(data,filtered);
     $('players').innerHTML=players.length?players.map(p=>`<tr><td>${esc(p.name)}</td><td>${p.kills}</td><td>${p.deaths?(p.kills/p.deaths).toFixed(2):p.kills?'∞':'—'}</td><td>${p.kostRounds?pct(p.kostSum/p.kostRounds):'—'}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Statistik pemain belum tersedia untuk pilihan ini.</td></tr>';
     renderMatches();
+    renderOperators();
+  }
+  function operatorFilter(extra={}) {
+    const main=filters();
+    return {event:main.event,team:main.team?C.teamName(data,main.team):null,side:$('operator-side').value,minPicks:Number($('operator-min').value),search:$('operator-search').value.trim(),sort:$('operator-sort').value,...extra};
+  }
+  function operatorHighlight(row,label,note,accent='teal') {
+    return `<article class="operator-highlight ${accent}"><p class="eyebrow">${esc(label)}</p><div class="operator-highlight-main">${operatorIcon(row.operator,'large')}<div><h3>${esc(row.operator)}</h3><span class="side-label ${row.side==='Attack'?'attack':'defense'}">${row.side==='Attack'?'Menyerang':'Bertahan'}</span></div></div><strong>${esc(note)}</strong><small>${num(row.wins)} menang dari ${num(row.picks)} pemilihan · ${pct(row.winRate)}</small></article>`;
+  }
+  function renderOperators() {
+    const rows=C.operatorStats(operators,operatorFilter());
+    const total=C.operatorStats(operators,operatorFilter({minPicks:0,search:''})).length;
+    const favorites=C.operatorStats(operators,operatorFilter({sort:'picks'}));
+    const winners=C.operatorStats(operators,operatorFilter({sort:'wins'}));
+    const rates=C.operatorStats(operators,operatorFilter({sort:'winRate'}));
+    const team=filters().team?C.teamName(data,filters().team):null;
+    const unavailable=filters().event && filters().event!==String(operators.competitionId);
+    const empty=unavailable?'Snapshot pemilihan operator tersedia untuk Salt Lake City Major 2026. Pilih event tersebut atau “Semua kompetisi”.':team&&!operators.rows.some(r=>r.team===team)?`Belum ada statistik pemilihan operator untuk ${team} pada snapshot ini.`:'Tidak ada operator yang memenuhi filter. Kurangi minimum pemilihan atau ubah pencarian.';
+    $('operator-insights').innerHTML=rows.length?operatorHighlight(favorites[0],'Paling sering dipilih',`${num(favorites[0].picks)} kali dipilih`,'teal')+operatorHighlight(winners[0],'Kemenangan terbanyak',`${num(winners[0].wins)} ronde menang`,'amber')+operatorHighlight(rates[0],`Win rate tertinggi · min. ${$('operator-min').value} pilihan`,pct(rates[0].winRate),'blue'):`<div class="empty operator-empty">${esc(empty)}</div>`;
+    $('operator-count').textContent=`${rows.length} dari ${total} operator · ${team??'Semua tim dalam snapshot SLC'} · minimum ${$('operator-min').value} pemilihan. Filter kompetisi dan tim mengikuti filter utama.`;
+    $('operator-rows').innerHTML=rows.length?rows.map((r,i)=>`<tr><td><div class="operator-name"><span class="rank-no">${String(i+1).padStart(2,'0')}</span>${operatorIcon(r.operator)}<strong>${esc(r.operator)}</strong></div></td><td><span class="side-label ${r.side==='Attack'?'attack':'defense'}">${r.side==='Attack'?'Menyerang':'Bertahan'}</span></td><td>${num(r.picks)}</td><td class="win-count">${num(r.wins)}</td><td title="Interval Wilson 95% indikatif: ${pct(r.intervalLow)}–${pct(r.intervalHigh)}; ronde dapat berkorelasi"><div class="win-rate-cell"><b>${pct(r.winRate)}</b><span class="rate-track"><i style="width:${(r.winRate??0)*100}%"></i></span></div></td><td>${pct(r.presence)}<small class="cell-note">${num(r.sideRounds)} ronde sisi tercatat</small></td></tr>`).join(''):`<tr><td colspan="6" class="empty">${esc(empty)}</td></tr>`;
+    $('export-operators').disabled=!rows.length;
+    const spotlight=C.operatorStats(operators,operatorFilter({sort:'picks',side:'',search:'',minPicks:30}));
+    const attack=spotlight.find(r=>r.side==='Attack'),defense=spotlight.find(r=>r.side==='Defense');
+    $('operator-preview').innerHTML=attack&&defense?[attack,defense].map(r=>`<article class="spotlight-card ${r.side==='Attack'?'attack':'defense'}">${operatorIcon(r.operator,'spotlight-icon')}<div><p class="eyebrow">Favorit ${r.side==='Attack'?'menyerang':'bertahan'}</p><h3>${esc(r.operator)}</h3><p><b>${num(r.picks)}</b> pemilihan <span>·</span> <b>${num(r.wins)}</b> ronde menang</p></div><div class="spotlight-rate"><strong>${pct(r.winRate)}</strong><span>win rate ronde</span></div></article>`).join(''):`<p class="empty">${esc(empty)}</p>`;
+    const bans=C.banLeaders(data,filtered,filters().team||null),max=Math.max(1,...bans.map(b=>b.maps));
+    $('ban-chart').innerHTML=bans.length?bans.map(b=>`<div class="ban-item">${operatorIcon(b.operator)}<div><div class="map-meta"><b>${esc(b.operator)}</b><span>${num(b.maps)} peta</span></div><div class="bar-track"><div class="bar-fill" style="width:${b.maps/max*100}%"></div></div></div></div>`).join(''):'<p class="empty">Tidak ada operator ban dalam cakupan filter.</p>';
+  }
+  function renderOperatorSource() {
+    const all=C.operatorStats(operators,{sort:'picks',minPicks:0});
+    const featured=[all.find(r=>r.side==='Attack'),all.find(r=>r.side==='Defense')].filter(Boolean);
+    $('hero-operators').innerHTML=featured.map(r=>`<div class="hero-operator ${r.side==='Attack'?'attack':'defense'}">${operatorIcon(r.operator,'hero-icon')}<span class="hero-op-role">${r.side==='Attack'?'ATK':'DEF'}</span><h3>${esc(r.operator)}</h3><p>${num(r.picks)} pilihan <span>/${pct(r.winRate)}</span></p></div>`).join('');
+    const matchIds=new Set(data.matches.filter(m=>m.competitionId===operators.competitionId).map(m=>m.id));
+    const officialRounds=data.rounds.filter(r=>matchIds.has(r.matchId)).length;
+    $('operator-scope').textContent=`Cakupan replay sumber tambahan: ${num(operators.sideRounds.Attack)} ronde sisi serang dan ${num(operators.sideRounds.Defense)} sisi bertahan, dibanding ${num(officialRounds)} ronde pada hasil resmi event. Snapshot ${date(operators.source.capturedAt,true)} UTC; tidak mencakup semua event.`;
+    $('operator-provenance').textContent=`Snapshot sumber ditangkap ${operators.source.capturedAt}. SHA-256 ekstrak: ${operators.source.sha256}. Statistik menunjukkan hasil ronde ketika operator dipilih, bukan kemenangan series atau efek kausal operator.`;
   }
   function renderMatches() {
     const pages=Math.max(1,Math.ceil(filtered.length/pageSize)); page=Math.max(0,Math.min(page,pages-1));
@@ -64,7 +102,7 @@
   function accept(next,initial=false) {
     C.validate(next);
     if(!initial && next.meta.generatedAt===data.meta.generatedAt && next.meta.dataSha256===data.meta.dataSha256)return;
-    data=next; model=C.elo(data); populate(); render(); renderModel();
+    data=next; model=C.elo(data); populate(); render(); renderModel(); renderOperatorSource();
     $('season-label').textContent=`MUSIM ${data.meta.season.name}`;
     $('snapshot-date').textContent=`${date(data.meta.generatedAt)} UTC`;
     $('source-latest').textContent=`Laga selesai terbaru: ${data.meta.latestCompletedMatch?date(data.meta.latestCompletedMatch,true):'—'} UTC`;
@@ -90,7 +128,7 @@
     }
   }
   for(const link of document.querySelectorAll('nav a'))link.addEventListener('click',()=>setTimeout(view,0));
-  function view(){const name=['overview','matches','model'].includes(location.hash.slice(1))?location.hash.slice(1):'overview'; for(const node of document.querySelectorAll('.view'))node.hidden=node.id!==name;for(const a of document.querySelectorAll('nav a')){a.classList.toggle('active',a.dataset.view===name);a.setAttribute('aria-current',a.dataset.view===name?'page':'false');}}
+  function view(){const name=['overview','operators','matches','model'].includes(location.hash.slice(1))?location.hash.slice(1):'overview'; for(const node of document.querySelectorAll('.view'))node.hidden=node.id!==name;for(const a of document.querySelectorAll('nav a')){a.classList.toggle('active',a.dataset.view===name);a.setAttribute('aria-current',a.dataset.view===name?'page':'false');}$('view-label').textContent=({overview:'Ringkasan',operators:'Operator intel',matches:'Pertandingan',model:'Model & sumber'})[name];$('hero-banner').hidden=name!=='overview';$('main-content').dataset.view=name;}
   window.addEventListener('hashchange',view);
   for(const id of ['event-filter','team-filter'])$(id).addEventListener('change',()=>{page=0;render();});
   $('search').addEventListener('input',()=>{page=0;render();});
@@ -101,7 +139,10 @@
   $('predict').addEventListener('click',()=>{try{const a=$('forecast-a').value,b=$('forecast-b').value,p=C.forecast(data,a,b);$('forecast-result').innerHTML=p.ready?`<div class="forecast-number">${pct(p.p)} <small>peluang ${esc(C.teamName(data,a))}</small></div><p class="muted">${esc(C.teamName(data,b))}: ${pct(1-p.p)} · Riwayat: ${p.na} / ${p.nb} series. Prediksi ini tidak menambahkan pertandingan atau hasil ke dataset.</p>`:`<p class="coverage-note">Data belum cukup: masing-masing tim memerlukan 5 series eligible. Riwayat tersedia: ${p.na} / ${p.nb}.</p>`;}catch(e){$('forecast-result').textContent=e.message;}});
   $('export').addEventListener('click',()=>{const rows=filtered.map(m=>({match_id:m.id,date_utc:m.date,competition:data.competitions[m.competitionId]?.name,team_a:C.teamName(data,m.teamA),team_b:C.teamName(data,m.teamB),score_a:m.scoreA,score_b:m.scoreB,completed:m.completed,winner:m.winnerId?C.teamName(data,m.winnerId):null,detailed:m.detailed,source_url:data.meta.sourceBase+m.source}));const blob=new Blob([C.csv(rows)],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`r6-official-matches-${new Date(data.meta.generatedAt).toISOString().slice(0,10)}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   $('check-cache').addEventListener('click',loadCache);
+  for(const id of ['operator-side','operator-sort','operator-min'])$(id).addEventListener('change',renderOperators);
+  $('operator-search').addEventListener('input',renderOperators);
+  $('export-operators').addEventListener('click',()=>{const rows=C.operatorStats(operators,operatorFilter()).map(r=>({operator:r.operator,side:r.side,team:r.team,picks:r.picks,round_wins:r.wins,round_win_rate:r.winRate,side_rounds:r.sideRounds,presence:r.presence,source_url:operators.source.url,captured_at:operators.source.capturedAt}));const url=URL.createObjectURL(new Blob([C.csv(rows)],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download='r6-operators-slc-2026.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
   window.addEventListener('r6-update',()=>{try{accept(window.R6_LATEST);}catch(e){$('sync-status').textContent=`Cache baru ditolak: ${e.message}`;$('sync-status').className='error';}});
   window.addEventListener('r6-status',()=>{if(started)updateStatus();});
-  try{accept(JSON.parse($('dataset').textContent),true);started=true;view();loadCache();setInterval(loadCache,60000);setInterval(updateStatus,60000);}catch(e){$('fatal').hidden=false;$('fatal').textContent=`Snapshot tidak dapat ditampilkan: ${e.message}`;}
+  try{C.validateOperators(operators);accept(JSON.parse($('dataset').textContent),true);started=true;view();loadCache();setInterval(loadCache,60000);setInterval(updateStatus,60000);}catch(e){$('fatal').hidden=false;$('fatal').textContent=`Snapshot tidak dapat ditampilkan: ${e.message}`;}
 })();

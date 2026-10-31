@@ -1,6 +1,6 @@
 # QA prototype
 
-Status snapshot awal 31 Oktober 2026: **validasi sumber lulus, 13 tes otomatis lulus; QA visual browser masih terbuka**. Ini prototype yang bisa ditinjau, belum pernyataan kesiapan produksi.
+Status pembaruan 31 Oktober 2026: **validasi sumber hasil/operator lulus, 18 tes otomatis lulus; QA visual browser masih terbuka**. Ini prototype yang bisa ditinjau, belum pernyataan kesiapan produksi.
 
 ## Yang teruji
 
@@ -21,6 +21,13 @@ Status snapshot awal 31 Oktober 2026: **validasi sumber lulus, 13 tes otomatis l
 11. DOM: navigasi, filter, pencarian kosong, pagination, detail, forecast, ekspor, refresh, dan penolakan cache rusak.
 12. Snapshot tertanam dapat dirender tanpa folder data.
 13. Pembaru diuji dari salinan cache asli: rebuild offline, jaringan gagal, sumber rusak, snapshot/HTML terakhir tidak berubah pada kegagalan.
+14. Semua cohort statistik operator sesuai board sumber, tanpa menjumlahkan cohort total dengan cohort tim.
+15. Paling sering dipilih, ronde menang terbanyak, dan win rate diperingkatkan secara terpisah.
+16. Minimum sampel, sisi, tim, pencarian, dan event yang belum tercakup diterapkan.
+17. Win rate 0% dipertahankan; statistik rusak atau duplikat ditolak.
+18. Ban dihitung per peta unik dan tidak dipakai sebagai pemilihan atau kemenangan operator.
+
+Uji DOM juga mencakup navigasi Operator intel, pergantian sort, minimum sampel, pencarian, CSV operator, dan kondisi event yang belum tersedia. Font dan ikon tertanam agar tidak mengandalkan CDN saat demo dibuka. Palet diperbarui sesuai preferensi gelap dengan kontras lembut dan nuansa tactical esports.
 
 Uji DOM memakai jsdom; implementasi dialog dan objek URL unduhan diganti stub hanya dalam tes. Tes ini tidak membuktikan tampilan, perilaku dialog native, unduhan file nyata, atau kebijakan pemuatan script lokal setiap browser. Kegagalan jaringan/cache pada tes sengaja dibuat pada folder sementara, bukan dataset utama.
 
@@ -39,6 +46,7 @@ Browser pengujian menolak URL `file://`; tidak dilakukan pengujian visual melalu
 
 ```powershell
 python scripts/validate_data.py
+python scripts/validate_operators.py
 python scripts/build.py
 npm ci --ignore-scripts
 npm test

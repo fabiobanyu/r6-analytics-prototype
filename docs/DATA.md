@@ -2,6 +2,8 @@
 
 Sumber tunggal hasil pertandingan: halaman publik [Ubisoft R6 Esports](https://www.ubisoft.com/en-us/esports/rainbow-six/siege/competition/502). Pembaru membaca JSON `__NEXT_DATA__` yang sudah disertakan dalam HTML resmi, tanpa autentikasi atau endpoint privat. Jika struktur itu berubah, pembaru harus ditinjau; tidak ada jaminan stabilitas skema publik tersebut.
 
+Statistik **pemilihan operator dan ronde menang** memakai dataset tambahan `data/operators.json`, snapshot r6tv dengan cakupan event khusus. Dataset ini tidak digabung ke tabel hasil resmi dan tidak berasal dari kolom ban. Lihat [Operator intel](OPERATORS.md) untuk denominator, provenance, dan pembaruan terpisah.
+
 ## Cakupan penemuan
 
 1. Buka seed resmi `competition/502` dan cari satu musim `current=true` dalam `layoutData.seasons`.

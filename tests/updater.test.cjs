@@ -6,7 +6,7 @@ const digest=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).dig
 test('updater rebuilds verified cache offline, rejects corrupt sources, and retains snapshot on network failure',{timeout:45000},()=>{
   const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'r6-updater-test-'));
   try{
-    for(const dir of ['data','scripts','src'])fs.cpSync(path.join(root,dir),path.join(temporary,dir),{recursive:true,filter:src=>!src.endsWith('.update.lock')});
+    for(const dir of ['data','scripts','src','assets'])fs.cpSync(path.join(root,dir),path.join(temporary,dir),{recursive:true,filter:src=>!src.endsWith('.update.lock')});
     fs.copyFileSync(path.join(root,'index.html'),path.join(temporary,'index.html'));
     const command=process.env.PYTHON||'python';
     let run=spawnSync(command,['scripts/update_data.py','--offline','--detail-limit','0'],{cwd:temporary,encoding:'utf8',timeout:30000});

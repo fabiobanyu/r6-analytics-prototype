@@ -104,7 +104,39 @@
     };
     return '\uFEFF'+[columns.map(cell).join(','),...rows.map(r=>columns.map(k=>cell(r[k])).join(','))].join('\r\n');
   }
-  const api={validate,teamName,probability,elo,forecast,subset,summarize,playerLeaders,csv};
+  function validateOperators(d) {
+    if(d.schemaVersion!==1 || !Array.isArray(d.rows) || !d.source?.url || !d.source?.capturedAt)throw Error('Snapshot operator tidak sesuai');
+    const seen=new Set();
+    for(const r of d.rows){
+      const key=JSON.stringify([r.competitionId,r.team,r.operator,r.side]);
+      if(seen.has(key) || r.competitionId!==d.competitionId || !['Attack','Defense'].includes(r.side) || !r.operator || [r.picks,r.wins,r.sideRounds].some(n=>!Number.isInteger(n)||n<0) || r.wins>r.picks || r.picks>r.sideRounds)throw Error('Statistik operator tidak valid');
+      seen.add(key);
+    }
+    return true;
+  }
+  function operatorStats(d,filter={}) {
+    if(filter.event && String(d.competitionId)!==String(filter.event))return [];
+    const team=filter.team||null,min=Number(filter.minPicks??30);
+    let rows=d.rows.filter(r=>r.team===team && (!filter.side || r.side===filter.side) && r.picks>=min && (!filter.search || r.operator.toLocaleLowerCase().includes(filter.search.toLocaleLowerCase()))).map(r=>{
+      const n=r.picks,p=n?r.wins/n:null,z=1.96,den=n?1+z*z/n:null;
+      const center=n?(p+z*z/(2*n))/den:null,half=n?z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/den:null;
+      return {...r,winRate:p,presence:r.sideRounds?r.picks/r.sideRounds:null,intervalLow:n?Math.max(0,center-half):null,intervalHigh:n?Math.min(1,center+half):null};
+    });
+    const sort=filter.sort??'wins';
+    rows.sort((a,b)=>sort==='winRate'?(b.winRate??-1)-(a.winRate??-1)||b.picks-a.picks:sort==='picks'?b.picks-a.picks||b.wins-a.wins:b.wins-a.wins||b.picks-a.picks);
+    return rows;
+  }
+  function banLeaders(d,matches,teamId=null){
+    const ids=new Set(matches.map(m=>m.id)),counts={},seen=new Set();
+    for(const row of d.bans){
+      if(!ids.has(row.matchId) || (teamId!=null && String(row.teamId)!==String(teamId)))continue;
+      // A map can record the same operator at multiple round indices. Count each map once.
+      const key=JSON.stringify([row.gameId,row.operatorId]);if(seen.has(key))continue;seen.add(key);
+      const c=counts[row.operatorId]??={operator:row.operator,side:row.attacker?'Attack':'Defense',maps:0};c.maps++;
+    }
+    return Object.values(counts).sort((a,b)=>b.maps-a.maps||a.operator.localeCompare(b.operator)).slice(0,8);
+  }
+  const api={validate,teamName,probability,elo,forecast,subset,summarize,playerLeaders,csv,validateOperators,operatorStats,banLeaders};
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   global.R6Core=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

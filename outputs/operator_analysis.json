@@ -1,0 +1,73 @@
+{
+  "source": {
+    "provider": "r6tv",
+    "official": false,
+    "url": "https://r6tv.online/event/salt-lake-city-major",
+    "descriptionUrl": "https://r6tv.online/how-it-works",
+    "capturedAt": "2026-10-31T01:29:10.723604+00:00",
+    "htmlSha256": "9194b86a0e6b923f7ea19d804670482ebc6c2a7193d59602abf8542eae86faac",
+    "sha256": "c5a59bf9baabf91493cf9b99810f066be462dd6edba088b3f3d06c0166d0f139",
+    "file": "operator_sources/c5a59bf9baabf91493cf9b99810f066be462dd6edba088b3f3d06c0166d0f139.json.gz",
+    "extraction": "Exact opsData aggregate board embedded in a previously captured public event page.",
+    "updatePolicy": "Static research snapshot. No automated requests to r6tv. Main Ubisoft results continue updating independently."
+  },
+  "scope": "Only replay-derived operator observations represented by the r6tv board for this event; not all Ubisoft rounds or other events.",
+  "unit": "One recorded operator selection in one round; wins are rounds won by that operator’s side, not series wins.",
+  "sideRounds": {
+    "Attack": 886,
+    "Defense": 887
+  },
+  "minPicks": 30,
+  "favoriteAttack": {
+    "competitionId": 502,
+    "team": null,
+    "operator": "Deimos",
+    "side": "Attack",
+    "picks": 308,
+    "wins": 150,
+    "sideRounds": 886,
+    "winRate": 0.487012987012987,
+    "presence": 0.3476297968397291,
+    "intervalLow": 0.4316958037177751,
+    "intervalHigh": 0.5426501462773508
+  },
+  "favoriteDefense": {
+    "competitionId": 502,
+    "team": null,
+    "operator": "Smoke",
+    "side": "Defense",
+    "picks": 382,
+    "wins": 198,
+    "sideRounds": 887,
+    "winRate": 0.518324607329843,
+    "presence": 0.4306651634723788,
+    "intervalLow": 0.46828441880231003,
+    "intervalHigh": 0.5679999009807306
+  },
+  "mostWins": {
+    "competitionId": 502,
+    "team": null,
+    "operator": "Smoke",
+    "side": "Defense",
+    "picks": 382,
+    "wins": 198,
+    "sideRounds": 887,
+    "winRate": 0.518324607329843,
+    "presence": 0.4306651634723788,
+    "intervalLow": 0.46828441880231003,
+    "intervalHigh": 0.5679999009807306
+  },
+  "highestRate": {
+    "competitionId": 502,
+    "team": null,
+    "operator": "Pulse",
+    "side": "Defense",
+    "picks": 52,
+    "wins": 35,
+    "sideRounds": 887,
+    "winRate": 0.6730769230769231,
+    "presence": 0.058624577226606536,
+    "intervalLow": 0.5375593513988892,
+    "intervalHigh": 0.7847809826889593
+  }
+}
