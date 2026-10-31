@@ -1,0 +1,23 @@
+name: Validate local prototype
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - run: npm ci --ignore-scripts
+      - run: python scripts/validate_data.py
+      - run: python scripts/build.py
+      - run: npm test
+      # No deployment, Pages, external database, or fabricated data generation.

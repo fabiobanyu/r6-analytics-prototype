@@ -1,0 +1,241 @@
+{
+  "snapshotGeneratedAt": "2026-10-31T01:14:05.750992Z",
+  "dataSha256": "c2e0e8bfff8ba7ae418786011118ae22ce3f2441e2e5b4f6894562250006f791",
+  "latestCompletedMatch": "2026-10-24T12:00:00Z",
+  "counts": {
+    "series": 414,
+    "completed": 410,
+    "eligible": 408,
+    "details": 410,
+    "games": 620,
+    "rounds": 6696,
+    "playerGameRows": 6200,
+    "operatorBanRows": 7054,
+    "sourcePages": 450
+  },
+  "evaluation": {
+    "n": 274,
+    "total": 408,
+    "brier": 0.2423198100329373,
+    "logLoss": 0.6776729872295083,
+    "accuracy": 0.6058394160583942,
+    "decisive": 274,
+    "baselineBrier": 0.25,
+    "baselineLogLoss": 0.6931471805599453,
+    "priorBrier": 0.2427391972881246,
+    "priorLogLoss": 0.678643201241691,
+    "alwaysAAccuracy": 0.5948905109489051,
+    "bins": [
+      {
+        "low": 0,
+        "high": 0.2,
+        "n": 0,
+        "p": null,
+        "actual": null
+      },
+      {
+        "low": 0.2,
+        "high": 0.4,
+        "n": 15,
+        "p": 0.3646900279639498,
+        "actual": 0.4666666666666667
+      },
+      {
+        "low": 0.4,
+        "high": 0.6,
+        "n": 237,
+        "p": 0.5058671034062492,
+        "actual": 0.6118143459915611
+      },
+      {
+        "low": 0.6,
+        "high": 0.8,
+        "n": 22,
+        "p": 0.6239035453290048,
+        "actual": 0.5
+      },
+      {
+        "low": 0.8,
+        "high": 1,
+        "n": 0,
+        "p": null,
+        "actual": null
+      }
+    ]
+  },
+  "maps": [
+    {
+      "name": "Clubhouse",
+      "games": 92,
+      "rounds": 1043,
+      "attackWins": 493
+    },
+    {
+      "name": "Chalet",
+      "games": 77,
+      "rounds": 793,
+      "attackWins": 369
+    },
+    {
+      "name": "Lair",
+      "games": 77,
+      "rounds": 832,
+      "attackWins": 373
+    },
+    {
+      "name": "Fortress",
+      "games": 76,
+      "rounds": 836,
+      "attackWins": 357
+    },
+    {
+      "name": "Bank",
+      "games": 74,
+      "rounds": 777,
+      "attackWins": 355
+    },
+    {
+      "name": "NightHaven Labs",
+      "games": 61,
+      "rounds": 649,
+      "attackWins": 279
+    },
+    {
+      "name": "Kafe Dostoyevsky",
+      "games": 53,
+      "rounds": 570,
+      "attackWins": 259
+    },
+    {
+      "name": "Border",
+      "games": 51,
+      "rounds": 569,
+      "attackWins": 268
+    },
+    {
+      "name": "Villa",
+      "games": 51,
+      "rounds": 541,
+      "attackWins": 210
+    },
+    {
+      "name": "Consulate",
+      "games": 8,
+      "rounds": 86,
+      "attackWins": 37
+    }
+  ],
+  "weekly": [
+    [
+      "2026-05-04",
+      26
+    ],
+    [
+      "2026-05-11",
+      24
+    ],
+    [
+      "2026-05-18",
+      0
+    ],
+    [
+      "2026-05-25",
+      0
+    ],
+    [
+      "2026-06-01",
+      0
+    ],
+    [
+      "2026-06-08",
+      0
+    ],
+    [
+      "2026-06-15",
+      0
+    ],
+    [
+      "2026-06-22",
+      0
+    ],
+    [
+      "2026-06-29",
+      0
+    ],
+    [
+      "2026-07-06",
+      0
+    ],
+    [
+      "2026-07-13",
+      0
+    ],
+    [
+      "2026-07-20",
+      0
+    ],
+    [
+      "2026-07-27",
+      0
+    ],
+    [
+      "2026-08-03",
+      32
+    ],
+    [
+      "2026-08-10",
+      8
+    ],
+    [
+      "2026-08-17",
+      0
+    ],
+    [
+      "2026-08-24",
+      0
+    ],
+    [
+      "2026-08-31",
+      31
+    ],
+    [
+      "2026-09-07",
+      68
+    ],
+    [
+      "2026-09-14",
+      60
+    ],
+    [
+      "2026-09-21",
+      66
+    ],
+    [
+      "2026-09-28",
+      43
+    ],
+    [
+      "2026-10-05",
+      29
+    ],
+    [
+      "2026-10-12",
+      19
+    ],
+    [
+      "2026-10-19",
+      4
+    ]
+  ],
+  "assumptions": {
+    "initialElo": 1500,
+    "K": 24,
+    "scale": 400,
+    "evaluationMinPriorSeriesPerTeam": 3,
+    "forecastMinPriorSeriesPerTeam": 5,
+    "forfeits": "excluded from training and evaluation",
+    "timestampTies": "predict batch before applying any result"
+  },
+  "interpretation": "Historical exploratory baseline, partial season/stage coverage. Tiny gain versus historical team-A-frequency baseline; no demonstrated generalization to future events.",
+  "validation": "See validation.json for source-to-normalized checks and notes. DOM tests are not a visual browser test."
+}

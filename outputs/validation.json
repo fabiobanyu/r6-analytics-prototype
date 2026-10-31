@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "validatedAt": "2026-10-31T01:16:23.640797+00:00",
+  "snapshotGeneratedAt": "2026-10-31T01:14:05.750992Z",
+  "counts": {
+    "matches": 414,
+    "games": 620,
+    "rounds": 6696,
+    "players": 6200,
+    "bans": 7054,
+    "sources": 450
+  },
+  "errors": [],
+  "notes": [
+    {
+      "matchId": 9015,
+      "note": "Official forfeit; preserve source scores/result; excluded from Elo"
+    },
+    {
+      "matchId": 9023,
+      "note": "Official forfeit; preserve source scores/result; excluded from Elo"
+    }
+  ],
+  "missingMapNames": 0,
+  "excludedSourceSlots": 46,
+  "meaning": "Every published normalized result/statistic checked against its downloaded official source extract; no synthetic data generation."
+}

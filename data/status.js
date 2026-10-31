@@ -1,0 +1,1 @@
+window.R6_STATUS={"ok": true, "checkedAt": "2026-10-31T01:14:05.750992Z", "message": "Verified official snapshot published", "errors": [], "matches": 414, "detailed": 410, "offline": false};window.dispatchEvent(new Event("r6-status"));
